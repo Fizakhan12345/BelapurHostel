@@ -18,10 +18,10 @@ export const routes: Routes = [
   //   path: 'properties/:id',
   //   renderMode: RenderMode.Server  // Use SSR instead of prerender
   // }
-  {
-    path: 'booking/:id',
-    loadComponent: () => import('./features/booking/booking').then(m => m.Booking)
-  },
+  // {
+  //   path: 'booking/:id',
+  //   loadComponent: () => import('./features/booking/booking').then(m => m.Booking)
+  // },
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login').then(m => m.Login)
