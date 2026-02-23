@@ -14,10 +14,10 @@ export const routes: Routes = [
     path: 'properties',
     loadComponent: () => import('./features/properties/properties').then(m => m.Properties)
   },
-  {
-    path: 'properties/:id',
-    loadComponent: () => import('./features/properties/property-detail/property-detail').then(m => m.PropertyDetail)
-  },
+  // {
+  //   path: 'properties/:id',
+  //   renderMode: RenderMode.Server  // Use SSR instead of prerender
+  // }
   {
     path: 'booking/:id',
     loadComponent: () => import('./features/booking/booking').then(m => m.Booking)
