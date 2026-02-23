@@ -1,0 +1,418 @@
+<!-- property-details.component.html -->
+<div class="property-details-page">
+  
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-section">
+    <div class="container">
+      <div class="breadcrumb">
+        <a routerLink="/">Home</a>
+        <span class="separator">/</span>
+        <a routerLink="/properties">Properties</a>
+        <span class="separator">/</span>
+        <span class="current">{{ property.name }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Gallery Section -->
+  <section class="gallery-section">
+    <div class="container">
+      <div class="gallery-grid">
+        <div class="main-image" (click)="openImageGallery(0)">
+          <img [src]="property.images[0]" [alt]="property.name">
+          <div class="image-overlay">
+            <button class="view-all-btn">
+              <span class="icon">📷</span>
+              View All {{ property.images.length }} Photos
+            </button>
+          </div>
+        </div>
+        
+        <div class="side-images">
+          <div class="side-image" 
+               *ngFor="let image of property.images.slice(1, 5); let i = index"
+               (click)="openImageGallery(i + 1)">
+            <img [src]="image" [alt]="property.name">
+            <div class="image-overlay" *ngIf="i === 3 && property.images.length > 5">
+              <span class="more-images">+{{ property.images.length - 5 }} more</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="content-wrapper">
+      
+      <!-- Left Column -->
+      <div class="left-column">
+        
+        <!-- Property Header -->
+        <div class="property-header">
+          <div class="header-top">
+            <div class="title-section">
+              <div class="badges">
+                <span class="badge verified" *ngIf="property.verified">
+                  ✓ Verified
+                </span>
+                <span class="badge type">{{ property.type }}</span>
+                <span class="badge gender">{{ property.gender }}</span>
+              </div>
+              <h1>{{ property.name }}</h1>
+              <div class="location-info">
+                <span class="icon">📍</span>
+                <span>{{ property.location }}, {{ property.area }}</span>
+              </div>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="action-btn" 
+                      [class.active]="isFavorite"
+                      (click)="toggleFavorite()">
+                <span class="icon">{{ isFavorite ? '❤️' : '🤍' }}</span>
+              </button>
+              <button class="action-btn" (click)="shareProperty()">
+                <span class="icon">🔗</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="rating-section">
+            <div class="rating">
+              <span class="star">★</span>
+              <span class="rating-value">{{ property.rating }}</span>
+              <span class="reviews">({{ property.reviews }} reviews)</span>
+            </div>
+            <div class="distance">
+              <span class="icon">🚇</span>
+              <span>{{ property.distance }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-navigation">
+          <button class="tab-btn" 
+                  [class.active]="activeTab === 'overview'"
+                  (click)="activeTab = 'overview'">
+            Overview
+          </button>
+          <button class="tab-btn" 
+                  [class.active]="activeTab === 'rooms'"
+                  (click)="activeTab = 'rooms'">
+            Room Types
+          </button>
+          <button class="tab-btn" 
+                  [class.active]="activeTab === 'amenities'"
+                  (click)="activeTab = 'amenities'">
+            Amenities
+          </button>
+          <button class="tab-btn" 
+                  [class.active]="activeTab === 'location'"
+                  (click)="activeTab = 'location'">
+            Location
+          </button>
+          <button class="tab-btn" 
+                  [class.active]="activeTab === 'reviews'"
+                  (click)="activeTab = 'reviews'">
+            Reviews
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+          
+          <!-- Overview Tab -->
+          <div class="tab-pane" *ngIf="activeTab === 'overview'">
+            <div class="section-card">
+              <h2>About This Property</h2>
+              <p class="description">{{ property.description }}</p>
+            </div>
+
+            <div class="section-card">
+              <h2>Property Highlights</h2>
+              <div class="highlights-grid">
+                <div class="highlight-item" *ngFor="let highlight of property.highlights">
+                  <span class="check-icon">✓</span>
+                  <span>{{ highlight }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <h2>House Rules</h2>
+              <ul class="rules-list">
+                <li *ngFor="let rule of property.rules">
+                  <span class="bullet">•</span>
+                  {{ rule }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Room Types Tab -->
+          <div class="tab-pane" *ngIf="activeTab === 'rooms'">
+            <div class="section-card">
+              <h2>Available Room Types</h2>
+              <div class="rooms-grid">
+                <div class="room-card" 
+                     *ngFor="let room of property.roomTypes"
+                     [class.selected]="selectedRoom?.id === room.id"
+                     (click)="selectRoom(room)">
+                  <div class="room-header">
+                    <h3>{{ room.type }}</h3>
+                    <span class="availability" [class.limited]="room.available < 3">
+                      {{ room.available }} Available
+                    </span>
+                  </div>
+                  <div class="room-price">
+                    <span class="price">₹{{ room.price }}</span>
+                    <span class="period">/month</span>
+                  </div>
+                  <div class="room-features">
+                    <div class="feature" *ngFor="let feature of room.features">
+                      <span class="icon">✓</span>
+                      <span>{{ feature }}</span>
+                    </div>
+                  </div>
+                  <button class="book-btn" (click)="openBookingModal(room)">
+                    Book Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amenities Tab -->
+          <div class="tab-pane" *ngIf="activeTab === 'amenities'">
+            <div class="section-card">
+              <h2>Amenities & Facilities</h2>
+              <div class="amenities-grid">
+                <div class="amenity-item" 
+                     *ngFor="let amenity of showAllAmenities ? property.amenities : property.amenities.slice(0, 8)">
+                  <span class="amenity-icon">{{ amenity.icon }}</span>
+                  <span class="amenity-name">{{ amenity.name }}</span>
+                </div>
+              </div>
+              <button class="show-more-btn" 
+                      *ngIf="property.amenities.length > 8"
+                      (click)="showAllAmenities = !showAllAmenities">
+                {{ showAllAmenities ? 'Show Less' : 'Show All ' + property.amenities.length + ' Amenities' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Location Tab -->
+          <div class="tab-pane" *ngIf="activeTab === 'location'">
+            <div class="section-card">
+              <h2>Location & Address</h2>
+              <p class="address">
+                <span class="icon">📍</span>
+                {{ property.address }}
+              </p>
+              
+              <div class="map-placeholder">
+                <div class="map-icon">🗺️</div>
+                <p>Interactive map view</p>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <h2>Nearby Places</h2>
+              <div class="nearby-list">
+                <div class="nearby-item" *ngFor="let place of property.nearbyPlaces">
+                  <div class="place-info">
+                    <h4>{{ place.name }}</h4>
+                    <span class="place-type">{{ place.type }}</span>
+                  </div>
+                  <div class="place-distance">{{ place.distance }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reviews Tab -->
+          <div class="tab-pane" *ngIf="activeTab === 'reviews'">
+            <div class="section-card">
+              <h2>Guest Reviews</h2>
+              <div class="reviews-summary">
+                <div class="rating-box">
+                  <div class="big-rating">{{ property.rating }}</div>
+                  <div class="stars">★★★★★</div>
+                  <div class="review-count">{{ property.reviews }} reviews</div>
+                </div>
+              </div>
+
+              <div class="reviews-list">
+                <div class="review-card" *ngFor="let review of reviews">
+                  <div class="review-header">
+                    <div class="avatar">{{ review.avatar }}</div>
+                    <div class="reviewer-info">
+                      <h4>{{ review.name }}</h4>
+                      <div class="review-meta">
+                        <div class="stars">
+                          <span *ngFor="let star of getStarArray(review.rating)">★</span>
+                        </div>
+                        <span class="date">{{ review.date }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="review-text">{{ review.review }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right Column - Booking Card -->
+      <div class="right-column">
+        <div class="booking-card sticky">
+          <div class="price-section">
+            <div class="price">
+              <span class="amount">₹{{ property.price }}</span>
+              <span class="period">/month</span>
+            </div>
+            <div class="deposit">
+              Security Deposit: ₹{{ property.deposit }}
+            </div>
+          </div>
+
+          <div class="booking-actions">
+            <button class="btn-primary" (click)="openBookingModal()">
+              Book Now
+            </button>
+            <button class="btn-secondary" (click)="scheduleVisit()">
+              Schedule Visit
+            </button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="owner-section">
+            <h3>Contact Property Owner</h3>
+            <div class="owner-info">
+              <div class="owner-avatar">{{ property.owner.name.charAt(0) }}</div>
+              <div class="owner-details">
+                <h4>{{ property.owner.name }}</h4>
+                <p class="response-time">{{ property.owner.responseTime }}</p>
+              </div>
+            </div>
+            <div class="contact-buttons">
+              <button class="contact-btn">
+                <span class="icon">📞</span>
+                Call
+              </button>
+              <button class="contact-btn">
+                <span class="icon">✉️</span>
+                Email
+              </button>
+              <button class="contact-btn">
+                <span class="icon">💬</span>
+                Chat
+              </button>
+            </div>
+          </div>
+
+          <div class="safety-info">
+            <span class="icon">🛡️</span>
+            <div class="safety-text">
+              <strong>Safe & Secure</strong>
+              <p>100% verified property with secure payment</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div class="modal-overlay" *ngIf="showBookingModal" (click)="closeBookingModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Book Your Stay</h2>
+        <button class="close-btn" (click)="closeBookingModal()">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="booking-summary">
+          <h3>{{ property.name }}</h3>
+          <p>{{ property.location }}</p>
+          <div class="selected-room" *ngIf="selectedRoom">
+            <strong>Room Type:</strong> {{ selectedRoom.type }}
+            <br>
+            <strong>Price:</strong> ₹{{ selectedRoom.price }}/month
+          </div>
+        </div>
+
+        <form class="booking-form">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" class="form-control" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" class="form-control" placeholder="Enter your email" required>
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" class="form-control" placeholder="Enter your phone number" required>
+          </div>
+
+          <div class="form-group">
+            <label>Move-in Date *</label>
+            <input type="date" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Duration (Months) *</label>
+            <select class="form-control" required>
+              <option value="">Select duration</option>
+              <option value="3">3 Months</option>
+              <option value="6">6 Months</option>
+              <option value="12">12 Months</option>
+              <option value="24">24 Months</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Special Requests (Optional)</label>
+            <textarea class="form-control" rows="3" placeholder="Any special requirements..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit" (click)="submitBooking()">
+            Submit Booking Request
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Gallery Modal -->
+  <div class="gallery-modal" *ngIf="showImageGallery">
+    <div class="gallery-header">
+      <h3>{{ currentImageIndex + 1 }} / {{ property.images.length }}</h3>
+      <button class="close-gallery" (click)="closeImageGallery()">×</button>
+    </div>
+    
+    <div class="gallery-main">
+      <button class="nav-btn prev" (click)="prevImage()">‹</button>
+      <img [src]="property.images[currentImageIndex]" [alt]="property.name">
+      <button class="nav-btn next" (click)="nextImage()">›</button>
+    </div>
+    
+    <div class="gallery-thumbnails">
+      <img *ngFor="let image of property.images; let i = index"
+           [src]="image"
+           [class.active]="i === currentImageIndex"
+           (click)="setImage(i)">
+    </div>
+  </div>
+
+</div>

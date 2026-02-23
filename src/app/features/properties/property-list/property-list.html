@@ -1,0 +1,290 @@
+<!-- property-list.html -->
+<div class="browse-stays-container">
+  <!-- Hero Search Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Find Your Perfect Stay in Mumbai</h1>
+      <p class="hero-subtitle">Discover verified PGs, hostels, and co-living spaces across Mumbai</p>
+      
+      <div class="search-bar">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="applyFilters()"
+            placeholder="Search by location, area, or property name..."
+            class="search-input"
+          />
+        </div>
+        <button class="filter-toggle-btn" (click)="toggleFilters()">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 6h12M6 10h8M8 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Filters
+          <span class="filter-count" *ngIf="selectedAmenities.length > 0 || selectedGender || selectedType">
+            {{ (selectedAmenities.length + (selectedGender ? 1 : 0) + (selectedType ? 1 : 0)) }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Sidebar Filters -->
+    <aside class="filters-sidebar" [class.active]="showFilters">
+      <div class="filters-header">
+        <h2>Filters</h2>
+        <button class="close-filters" (click)="toggleFilters()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="filters-content">
+        <!-- Gender Filter -->
+        <div class="filter-section">
+          <h3 class="filter-title">Gender</h3>
+          <div class="filter-options">
+            <label class="filter-option" *ngFor="let gender of genderOptions">
+              <input 
+                type="radio" 
+                name="gender" 
+                [value]="gender"
+                [(ngModel)]="selectedGender"
+                (ngModelChange)="applyFilters()"
+              />
+              <span class="filter-label">{{ gender }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Property Type Filter -->
+        <div class="filter-section">
+          <h3 class="filter-title">Property Type</h3>
+          <div class="filter-options">
+            <label class="filter-option" *ngFor="let type of typeOptions">
+              <input 
+                type="radio" 
+                name="type" 
+                [value]="type"
+                [(ngModel)]="selectedType"
+                (ngModelChange)="applyFilters()"
+              />
+              <span class="filter-label">{{ type }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Price Range Filter -->
+        <div class="filter-section">
+          <h3 class="filter-title">Price Range</h3>
+          <div class="price-inputs">
+            <div class="price-input-group">
+              <label>Min</label>
+              <input 
+                type="number" 
+                [(ngModel)]="minPrice"
+                (ngModelChange)="applyFilters()"
+                placeholder="0"
+                class="price-input"
+              />
+            </div>
+            <span class="price-separator">—</span>
+            <div class="price-input-group">
+              <label>Max</label>
+              <input 
+                type="number" 
+                [(ngModel)]="maxPrice"
+                (ngModelChange)="applyFilters()"
+                placeholder="50000"
+                class="price-input"
+              />
+            </div>
+          </div>
+          <div class="price-range-slider">
+            <input 
+              type="range" 
+              min="0" 
+              max="50000" 
+              step="1000"
+              [(ngModel)]="maxPrice"
+              (ngModelChange)="applyFilters()"
+              class="range-slider"
+            />
+          </div>
+        </div>
+
+        <!-- Amenities Filter -->
+        <div class="filter-section">
+          <h3 class="filter-title">Amenities</h3>
+          <div class="amenities-grid">
+            <button 
+              class="amenity-tag"
+              [class.selected]="selectedAmenities.includes(amenity)"
+              (click)="toggleAmenity(amenity)"
+              *ngFor="let amenity of amenityOptions"
+            >
+              {{ amenity }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Clear Filters -->
+        <button class="clear-filters-btn" (click)="clearFilters()">
+          Clear All Filters
+        </button>
+      </div>
+    </aside>
+
+    <!-- Properties List -->
+    <div class="properties-section">
+      <!-- Results Header -->
+      <div class="results-header">
+        <div class="results-info">
+          <h2>{{ filteredProperties.length }} Properties Found</h2>
+          <p *ngIf="searchQuery">Results for "{{ searchQuery }}"</p>
+        </div>
+        
+        <div class="results-controls">
+          <select [(ngModel)]="sortBy" (ngModelChange)="applyFilters()" class="sort-select">
+            <option *ngFor="let option of sortOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+          
+          <button class="view-toggle" (click)="toggleViewMode()">
+            <svg *ngIf="viewMode === 'grid'" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="3" y="3" width="6" height="6" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="11" y="3" width="6" height="6" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="3" y="11" width="6" height="6" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="11" y="11" width="6" height="6" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            <svg *ngIf="viewMode === 'list'" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <line x1="3" y1="5" x2="17" y2="5" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="3" y1="10" x2="17" y2="10" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="3" y1="15" x2="17" y2="15" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-state" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Loading properties...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="!loading && filteredProperties.length === 0">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" stroke="#E5E7EB" stroke-width="2" stroke-dasharray="4 4"/>
+          <path d="M60 40v40M40 60h40" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h3>No properties found</h3>
+        <p>Try adjusting your filters or search criteria</p>
+        <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
+      </div>
+
+      <!-- Properties Grid/List -->
+      <div class="properties-grid" [class.list-view]="viewMode === 'list'" *ngIf="!loading && filteredProperties.length > 0">
+        <div 
+          class="property-card"
+          *ngFor="let property of filteredProperties"
+          (click)="viewPropertyDetails(property.id)"
+        >
+          <!-- Property Image -->
+          <div class="property-image-container">
+            <img [src]="property.image" [alt]="property.name" class="property-image" />
+            <div class="property-badges">
+              <span class="badge verified" *ngIf="property.verified">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Verified
+              </span>
+              <span class="badge type">{{ property.type }}</span>
+            </div>
+            <button class="wishlist-btn">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 17.5s-7-4-7-9.5a3.5 3.5 0 0 1 7-0.5 3.5 3.5 0 0 1 7 0.5c0 5.5-7 9.5-7 9.5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Property Details -->
+          <div class="property-details">
+            <div class="property-header">
+              <h3 class="property-name">{{ property.name }}</h3>
+              <div class="property-rating">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 1l2 5h5l-4 3 1.5 5L8 11l-4.5 3L5 9 1 6h5l2-5z"/>
+                </svg>
+                <span>{{ property.rating }}</span>
+                <span class="reviews">({{ property.reviews }})</span>
+              </div>
+            </div>
+
+            <div class="property-location">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 13s-5-3.5-5-7.5a5 5 0 1 1 10 0c0 4-5 7.5-5 7.5z" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="7" cy="5.5" r="1.5" fill="currentColor"/>
+              </svg>
+              <span>{{ property.location }}</span>
+              <span class="dot">•</span>
+              <span>{{ property.area }}</span>
+            </div>
+
+            <div class="property-distance">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M7 3.5v3.5l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              {{ property.distance }}
+            </div>
+
+            <div class="property-amenities">
+              <span class="amenity-chip" *ngFor="let amenity of property.amenities.slice(0, 4)">
+                {{ amenity }}
+              </span>
+              <span class="amenity-more" *ngIf="property.amenities.length > 4">
+                +{{ property.amenities.length - 4 }}
+              </span>
+            </div>
+
+            <div class="property-footer">
+              <div class="property-gender">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M3 12a4 4 0 0 1 8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                {{ property.gender }}
+              </div>
+              <div class="property-available">
+                <span class="available-dot"></span>
+                {{ property.available }} rooms available
+              </div>
+            </div>
+
+            <div class="property-pricing">
+              <div class="price-info">
+                <span class="price">₹{{ property.price | number }}<span class="period">/month</span></span>
+                <span class="deposit">Deposit: ₹{{ property.deposit | number }}</span>
+              </div>
+              <button class="view-details-btn">
+                View Details
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,245 @@
+<!-- help.component.html -->
+<div class="help-page">
+
+  <!-- Animated Background -->
+  <div class="bg-scene">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="grid-mesh"></div>
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="page-container">
+      <div class="hero-content">
+        <span class="hero-badge">
+          <span class="badge-dot"></span>
+          Support Centre — We're here 24×7
+        </span>
+        <h1 class="hero-title">
+          How can we <span class="gradient-text">help you?</span>
+        </h1>
+        <p class="hero-sub">
+          Search our knowledge base, browse FAQs, or reach our support team directly.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="search-wrap">
+          <div class="search-glass" [class.focused]="searchFocused">
+            <span class="search-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </span>
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              (focus)="searchFocused = true"
+              (blur)="searchFocused = false"
+              (input)="onSearch()"
+              placeholder="Search for answers... e.g. 'cancel booking', 'refund policy'"
+              class="search-input"
+            />
+            <button class="search-btn" (click)="onSearch()">Search</button>
+          </div>
+
+          <!-- Live Search Results -->
+          <div class="search-results-drop" *ngIf="searchResults.length > 0 && searchQuery.length > 1">
+            <div class="search-result-item" *ngFor="let r of searchResults" (click)="openFaq(r)">
+              <span class="sr-icon">{{ r.icon }}</span>
+              <div class="sr-text">
+                <span class="sr-title">{{ r.question }}</span>
+                <span class="sr-cat">{{ r.category }}</span>
+              </div>
+              <span class="sr-arrow">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Popular Tags -->
+        <div class="popular-tags">
+          <span class="tags-label">Popular:</span>
+          <button
+            class="tag-pill"
+            *ngFor="let tag of popularTags"
+            (click)="quickSearch(tag)">
+            {{ tag }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS ROW -->
+  <section class="stats-section">
+    <div class="page-container">
+      <div class="stats-glass-row">
+        <div class="stat-glass-card" *ngFor="let s of stats">
+          <span class="stat-icon">{{ s.icon }}</span>
+          <span class="stat-value">{{ s.value }}</span>
+          <span class="stat-label">{{ s.label }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY CARDS -->
+  <section class="categories-section">
+    <div class="page-container">
+      <div class="section-header">
+        <h2 class="section-title">Browse by <span class="gradient-text">Topic</span></h2>
+        <p class="section-sub">Find answers organized by category</p>
+      </div>
+
+      <div class="cat-grid">
+        <div
+          class="cat-glass-card"
+          *ngFor="let cat of helpCategories; let i = index"
+          [class.active]="activeCategory === cat.key"
+          (click)="selectCategory(cat.key)"
+          [style.animation-delay]="i * 0.08 + 's'">
+          <div class="cat-icon-ring" [style.background]="cat.gradient">
+            <span class="cat-icon">{{ cat.icon }}</span>
+          </div>
+          <h3 class="cat-title">{{ cat.title }}</h3>
+          <p class="cat-desc">{{ cat.description }}</p>
+          <span class="cat-count">{{ cat.count }} articles</span>
+          <div class="cat-shine"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="faq-section">
+    <div class="page-container">
+      <div class="section-header">
+        <h2 class="section-title">
+          {{ activeCategory === 'all' ? 'Frequently Asked' : activeCategoryLabel }}
+          <span class="gradient-text"> Questions</span>
+        </h2>
+        <p class="section-sub">Click any question to expand the answer</p>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="faq-filter-row">
+        <button
+          class="faq-filter-btn"
+          *ngFor="let cat of helpCategories"
+          [class.active]="activeCategory === cat.key"
+          (click)="selectCategory(cat.key)">
+          {{ cat.icon }} {{ cat.title }}
+        </button>
+      </div>
+
+      <!-- FAQ List -->
+      <div class="faq-list">
+        <div
+          class="faq-glass-item"
+          *ngFor="let faq of filteredFaqs; let i = index"
+          [class.open]="openFaqId === faq.id"
+          [style.animation-delay]="i * 0.06 + 's'"
+          (click)="toggleFaq(faq.id)">
+          <div class="faq-question-row">
+            <span class="faq-q-icon">{{ faq.icon }}</span>
+            <span class="faq-question">{{ faq.question }}</span>
+            <span class="faq-chevron" [class.rotated]="openFaqId === faq.id">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-answer-wrap" [class.visible]="openFaqId === faq.id">
+            <div class="faq-answer">
+              <p>{{ faq.answer }}</p>
+              <div class="faq-footer-row" *ngIf="faq.link">
+                <a [href]="faq.link" class="faq-read-more">
+                  Learn more →
+                </a>
+              </div>
+              <div class="faq-helpful">
+                <span>Was this helpful?</span>
+                <button class="helpful-btn yes" (click)="markHelpful(faq.id, true, $event)">
+                  👍 Yes
+                </button>
+                <button class="helpful-btn no" (click)="markHelpful(faq.id, false, $event)">
+                  👎 No
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT OPTIONS -->
+  <section class="contact-section">
+    <div class="page-container">
+      <div class="section-header">
+        <h2 class="section-title">Still need <span class="gradient-text">help?</span></h2>
+        <p class="section-sub">Our support team is ready to assist you around the clock</p>
+      </div>
+
+      <div class="contact-cards-grid">
+        <div class="contact-glass-card" *ngFor="let c of contactOptions; let i = index"
+             [style.animation-delay]="i * 0.1 + 's'">
+          <div class="contact-icon-wrap" [style.background]="c.gradient">
+            <span>{{ c.icon }}</span>
+          </div>
+          <h3 class="contact-title">{{ c.title }}</h3>
+          <p class="contact-desc">{{ c.description }}</p>
+          <div class="contact-meta">
+            <span class="contact-timing">{{ c.timing }}</span>
+          </div>
+          <button class="contact-action-btn" (click)="handleContact(c)">
+            {{ c.action }}
+          </button>
+          <div class="contact-card-glow" [style.background]="c.gradient"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK GUIDE STEPS -->
+  <section class="guide-section">
+    <div class="page-container">
+      <div class="guide-glass-wrap">
+        <div class="guide-left">
+          <span class="section-tag">GETTING STARTED</span>
+          <h2 class="guide-title">New to <span class="gradient-text">HostelBook?</span></h2>
+          <p class="guide-sub">Follow these simple steps to find and book your perfect hostel in Mumbai.</p>
+          <button class="guide-cta-btn" routerLink="/properties">Browse Properties →</button>
+        </div>
+        <div class="guide-steps">
+          <div class="guide-step" *ngFor="let step of guideSteps; let i = index"
+               [style.animation-delay]="i * 0.15 + 's'">
+            <div class="step-number-wrap">
+              <span class="step-number">{{ i + 1 }}</span>
+              <div class="step-line" *ngIf="i < guideSteps.length - 1"></div>
+            </div>
+            <div class="step-content">
+              <span class="step-icon">{{ step.icon }}</span>
+              <div>
+                <h4 class="step-title">{{ step.title }}</h4>
+                <p class="step-desc">{{ step.desc }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOAST -->
+  <div class="help-toast" [class.show]="showToast">
+    <span class="toast-icon">{{ toastIcon }}</span>
+    {{ toastMsg }}
+  </div>
+
+</div>

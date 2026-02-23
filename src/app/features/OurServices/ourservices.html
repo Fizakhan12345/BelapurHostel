@@ -1,0 +1,119 @@
+<!-- our-services.component.html -->
+<div class="services-wrapper">
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-bg">
+      <div class="hero-orb orb-1"></div>
+      <div class="hero-orb orb-2"></div>
+      <div class="hero-orb orb-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <span class="hero-tag">BELAPUR HOSTEL SERVICES</span>
+      <h1 class="hero-title">
+        <span class="title-line">World-Class</span>
+        <span class="title-line accent">Services</span>
+      </h1>
+      <p class="hero-subtitle">
+        Experience unparalleled hospitality through our comprehensive suite of hotel management solutions, crafted to elevate every guest's journey.
+      </p>
+      <div class="hero-stats">
+        <div class="stat-item" *ngFor="let stat of stats">
+          <span class="stat-number">{{ stat.value }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll to explore</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Services Filter -->
+  <section class="filter-section">
+    <div class="container">
+      <div class="filter-bar">
+        <button
+          class="filter-btn"
+          *ngFor="let cat of categories"
+          [class.active]="activeCategory === cat.key"
+          (click)="filterServices(cat.key)">
+          <span class="filter-icon">{{ cat.icon }}</span>
+          <span>{{ cat.label }}</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOSTEL ESSENTIAL SERVICES SECTION ===== -->
+  <section class="essentials-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">HOSTEL FACILITIES</span>
+        <h2 class="section-title">Essential <span class="accent-text">Amenities</span></h2>
+        <p class="section-desc">Everything you need for a safe, comfortable and convenient stay — available round the clock.</p>
+      </div>
+
+      <!-- Big highlight cards row -->
+      <div class="essentials-top-row">
+        <div class="essential-highlight-card" *ngFor="let es of essentialHighlights">
+          <div class="ess-hl-icon-wrap" [style.background]="es.gradient">
+            <span class="ess-hl-icon">{{ es.icon }}</span>
+          </div>
+          <div class="ess-hl-body">
+            <div class="ess-hl-badge" *ngIf="es.badge">{{ es.badge }}</div>
+            <h3 class="ess-hl-title">{{ es.title }}</h3>
+            <p class="ess-hl-desc">{{ es.description }}</p>
+            <div class="ess-hl-tags">
+              <span class="ess-tag" *ngFor="let tag of es.tags">{{ tag }}</span>
+            </div>
+          </div>
+          <div class="ess-status-pill" [class.active]="es.available">
+            <span class="status-dot"></span>
+            {{ es.available ? 'Active' : 'Scheduled' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Small amenity icon grid -->
+      <div class="amenities-grid">
+        <div class="amenity-tile" *ngFor="let am of amenityTiles" (click)="onAmenityClick(am)">
+          <div class="amenity-icon-ring" [style.borderColor]="am.color">
+            <span class="amenity-icon">{{ am.icon }}</span>
+          </div>
+          <span class="amenity-name">{{ am.name }}</span>
+          <span class="amenity-timing">{{ am.timing }}</span>
+        </div>
+      </div>
+
+      <!-- Availability banner -->
+      <div class="availability-banner">
+        <div class="avail-left">
+          <span class="avail-pulse"></span>
+          <span class="avail-text">All essential services are <strong>live & operational</strong> right now</span>
+        </div>
+        <div class="avail-right">
+          <span class="avail-item" *ngFor="let av of availabilityBadges">
+            <span>{{ av.icon }}</span> {{ av.label }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Toast Notification -->
+  <div class="toast" [class.show]="showToast">{{ toastMessage }}</div>
+
+</div>

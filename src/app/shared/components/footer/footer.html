@@ -1,0 +1,210 @@
+<!-- footer.component.html -->
+<footer class="footer">
+
+  <!-- Decorative Top Border -->
+  <div class="footer-top-border">
+    <div class="border-line"></div>
+    <div class="border-diamond">◆</div>
+    <div class="border-line"></div>
+  </div>
+
+  <!-- Newsletter Strip -->
+  <div class="newsletter-strip">
+    <div class="newsletter-bg-orb"></div>
+    <div class="footer-container">
+      <div class="newsletter-inner">
+        <div class="nl-left">
+          <span class="nl-eyebrow">STAY IN THE LOOP</span>
+          <h3 class="nl-title">Get Exclusive Hostel Deals</h3>
+          <p class="nl-sub">Special offers, new listings & tips — straight to your inbox.</p>
+        </div>
+        <form class="nl-form" (ngSubmit)="subscribeNewsletter()">
+          <div class="nl-input-group">
+            <span class="nl-icon">✉</span>
+            <input
+              type="email"
+              [(ngModel)]="newsletterEmail"
+              name="email"
+              placeholder="Your email address"
+              required
+            />
+            <button type="submit" class="nl-btn" [disabled]="subscribed">
+              <span *ngIf="!subscribed">Subscribe →</span>
+              <span *ngIf="subscribed" class="nl-success">✓ Subscribed!</span>
+            </button>
+          </div>
+          <p class="nl-note">No spam ever. Unsubscribe anytime.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Footer Body -->
+  <div class="footer-body">
+    <div class="footer-container">
+      <div class="footer-body-grid">
+
+        <!-- Brand Column -->
+        <div class="footer-brand-col">
+          <!-- Logo -->
+          <div class="footer-logo">
+            <div class="logo-icon">🏠</div>
+            <div class="logo-text">
+              <span class="logo-name">HostelBook</span>
+              <span class="logo-city">Mumbai</span>
+            </div>
+          </div>
+          <p class="brand-tagline">
+            Your trusted platform for verified hostels, PG & co-living spaces across Mumbai. <em>Zero brokerage. 100% transparency.</em>
+          </p>
+
+          <!-- Contact -->
+          <div class="footer-contacts">
+            <a href="mailto:contact@hostelbook.com" class="f-contact-item">
+              <span class="f-contact-icon">✉</span>
+              <span>contact&#64;hostelbook.com</span>
+            </a>
+            <a href="tel:+911234567890" class="f-contact-item">
+              <span class="f-contact-icon">☎</span>
+              <span>+91 12345 67890</span>
+            </a>
+            <div class="f-contact-item">
+              <span class="f-contact-icon">📍</span>
+              <span>Mumbai, Maharashtra</span>
+            </div>
+          </div>
+
+          <!-- Social -->
+          <div class="social-row">
+            <a href="https://facebook.com" target="_blank" class="social-btn fb" aria-label="Facebook">
+              <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="social-btn ig" aria-label="Instagram">
+              <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="https://twitter.com" target="_blank" class="social-btn tw" aria-label="Twitter">
+              <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+            </a>
+            <a href="https://linkedin.com" target="_blank" class="social-btn li" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="https://youtube.com" target="_blank" class="social-btn yt" aria-label="YouTube">
+              <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="footer-vdivider"></div>
+
+        <!-- Links Columns -->
+        <div class="footer-links-area">
+          <!-- Quick Links -->
+          <div class="footer-link-col">
+            <h4 class="footer-col-title">
+              <span class="col-title-line"></span>
+              Quick Links
+            </h4>
+            <ul class="f-link-list">
+              <li *ngFor="let link of quickLinks">
+                <a [routerLink]="link.route" class="f-link">
+                  <span class="f-link-arrow">›</span>{{ link.name }}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Browse by Type -->
+          <div class="footer-link-col">
+            <h4 class="footer-col-title">
+              <span class="col-title-line"></span>
+              Browse by Type
+            </h4>
+            <ul class="f-link-list">
+              <li *ngFor="let type of propertyTypes">
+                <a [routerLink]="type.route" class="f-link">
+                  <span class="f-link-arrow">›</span>{{ type.name }}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Policies -->
+          <div class="footer-link-col">
+            <h4 class="footer-col-title">
+              <span class="col-title-line"></span>
+              Policies
+            </h4>
+            <ul class="f-link-list">
+              <li *ngFor="let policy of policies">
+                <a [routerLink]="policy.route" class="f-link">
+                  <span class="f-link-arrow">›</span>{{ policy.name }}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div class="footer-link-col">
+            <h4 class="footer-col-title">
+              <span class="col-title-line"></span>
+              Support
+            </h4>
+            <ul class="f-link-list">
+              <li *ngFor="let item of support">
+                <a [routerLink]="item.route" class="f-link">
+                  <span class="f-link-arrow">›</span>{{ item.name }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Trust Badges Row -->
+  <div class="trust-bar">
+    <div class="footer-container">
+      <div class="trust-row">
+        <div class="trust-pill" *ngFor="let badge of trustBadges">
+          <span class="trust-pill-icon">{{ badge.icon }}</span>
+          <div class="trust-pill-text">
+            <strong>{{ badge.strong }}</strong>
+            <span>{{ badge.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom Bar -->
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <div class="footer-bottom-row">
+
+        <p class="copyright">
+          &copy; {{ currentYear }} <span class="cr-brand">HostelBook Mumbai</span>. All rights reserved.
+        </p>
+
+        <div class="payment-row">
+          <span class="pay-label">We Accept</span>
+          <div class="pay-chips">
+            <span class="pay-chip">💳 Card</span>
+            <span class="pay-chip">🏦 UPI</span>
+            <span class="pay-chip">📱 Wallets</span>
+            <span class="pay-chip">🏧 Net Banking</span>
+          </div>
+        </div>
+
+        <button class="back-top-btn" (click)="scrollToTop()">
+          <span class="back-top-arrow">↑</span>
+          <span>Top</span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</footer>

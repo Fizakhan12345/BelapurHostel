@@ -1,0 +1,256 @@
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="container">
+        <div class="hero-text">
+          <div class="trust-badge">
+            <span class="badge-icon">✓</span>
+            <span>Trusted by 5,000+ tenants in Mumbai</span>
+          </div>
+          <h1 class="hero-title">What You See Is What You Rent</h1>
+          <p class="hero-subtitle">
+            Book 100% verified Hostels & PG Spaces in Mumbai for students and professionals, completely broker-free.
+          </p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+          <div class="search-box">
+            <div class="search-input-group">
+              <span class="search-icon">📍</span>
+              <input
+                type="text"
+                [(ngModel)]="searchLocation"
+                placeholder="Search by location (e.g., Bandra, Andheri, Powai...)"
+                class="search-input"
+              />
+            </div>
+            <button class="search-btn" (click)="onSearch()">
+              Search Stays
+            </button>
+          </div>
+
+          <!-- Popular Locations -->
+          <div class="popular-locations">
+            <span class="locations-label">Popular:</span>
+            <div class="location-chips">
+              <button
+                *ngFor="let loc of popularLocations.slice(0, 6)"
+                class="location-chip"
+                (click)="searchByLocation(loc.name)"
+              >
+                {{ loc.name }} ({{ loc.count }})
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-item" *ngFor="let stat of stats">
+            <div class="stat-value">{{ stat.value }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Properties -->
+  <section class="featured-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Featured Hostels & PGs in Mumbai</h2>
+        <p>Handpicked verified properties for your perfect stay</p>
+      </div>
+
+      <div class="properties-grid">
+        <div class="property-card" *ngFor="let property of featuredProperties">
+          <div class="property-image">
+            <img [src]="property.image" [alt]="property.name" />
+            <div class="property-badges">
+              <span class="badge verified" *ngIf="property.verified">✓ Verified</span>
+              <span class="badge type">{{ property.type }}</span>
+            </div>
+            <div class="property-gender">{{ property.gender }}</div>
+          </div>
+
+          <div class="property-details">
+            <div class="property-header">
+              <h3>{{ property.name }}</h3>
+              <div class="rating">
+                <span class="star">★</span>
+                <span class="rating-value">{{ property.rating }}</span>
+                <span class="reviews">({{ property.reviews }})</span>
+              </div>
+            </div>
+
+            <div class="property-location">
+              <span class="location-icon">📍</span>
+              <span>{{ property.location }}, {{ property.area }}</span>
+            </div>
+
+            <div class="property-distance">
+              <span class="distance-icon">🚇</span>
+              <span>{{ property.distance }}</span>
+            </div>
+
+            <div class="property-amenities">
+              <span class="amenity" *ngFor="let amenity of property.amenities.slice(0, 4)">
+                {{ amenity }}
+              </span>
+            </div>
+
+            <div class="property-footer">
+              <div class="property-price">
+                <span class="price">₹{{ property.price }}</span>
+                <span class="period">/month</span>
+              </div>
+              <a [routerLink]="['/properties', property.id]" class="btn-view">
+                View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-all-container">
+        <a routerLink="/properties" class="btn-view-all">
+          View All Properties
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="features-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why Choose HostelBook Mumbai?</h2>
+        <p>Your trusted partner for finding the perfect accommodation</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of features">
+          <div class="feature-icon" [style.background]="feature.color">
+            {{ feature.icon }}
+          </div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Book your perfect hostel in 3 simple steps</p>
+      </div>
+
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Search & Browse</h3>
+            <p>Find verified hostels and PGs across Mumbai with detailed photos and information</p>
+          </div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Connect & Visit</h3>
+            <p>Chat directly with property owners and schedule a visit to see the place</p>
+          </div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Book Securely</h3>
+            <p>Make secure online payments and move in hassle-free with digital agreements</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mumbai Locations -->
+  <section class="locations-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Explore Mumbai Locations</h2>
+        <p>Find hostels in your preferred area</p>
+      </div>
+
+      <div class="locations-grid">
+        <div class="location-card" *ngFor="let loc of popularLocations" (click)="searchByLocation(loc.name)">
+          <h3>{{ loc.name }}</h3>
+          <p>{{ loc.count }} Properties</p>
+          <span class="location-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>What Our Residents Say</h2>
+        <p>Real experiences from our happy tenants</p>
+      </div>
+
+      <div class="testimonials-carousel">
+        <div class="testimonial-card" *ngFor="let testimonial of testimonials; let i = index"
+             [class.active]="i === currentTestimonialIndex">
+          <div class="testimonial-header">
+            <div class="avatar">{{ testimonial.avatar }}</div>
+            <div class="testimonial-info">
+              <h4>{{ testimonial.name }}</h4>
+              <p class="testimonial-property">{{ testimonial.property }}, {{ testimonial.location }}</p>
+            </div>
+          </div>
+
+          <div class="testimonial-rating">
+            <span class="star" *ngFor="let star of getStarArray(testimonial.rating)">★</span>
+          </div>
+
+          <p class="testimonial-text">{{ testimonial.review }}</p>
+        </div>
+
+        <div class="carousel-dots">
+          <span class="dot" 
+                *ngFor="let t of testimonials; let i = index"
+                [class.active]="i === currentTestimonialIndex"
+                (click)="currentTestimonialIndex = i">
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Find Your Perfect Stay?</h2>
+        <p>Join thousands of happy residents who found their home through HostelBook Mumbai</p>
+        <div class="cta-buttons">
+          <a routerLink="/properties" class="btn-primary">Browse Properties</a>
+          <a routerLink="/property-list" class="btn-secondary">List Your Property</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

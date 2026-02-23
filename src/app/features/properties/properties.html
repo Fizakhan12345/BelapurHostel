@@ -1,0 +1,255 @@
+<!-- properties.html -->
+<div class="properties-container">
+  <!-- Header Section -->
+  <div class="properties-header">
+    <div class="header-content">
+      <div class="header-text">
+        <span class="header-label">DISCOVER</span>
+        <h1 class="header-title">Premium Properties in Mumbai</h1>
+        <p class="header-description">Curated collection of verified properties across the city</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-item">
+          <span class="stat-number">{{ properties.length }}</span>
+          <span class="stat-label">Properties</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">{{ verifiedCount }}</span>
+          <span class="stat-label">Verified</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">{{ featured}}</span>
+          <span class="stat-label">Featured</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Properties List -->
+  <div class="properties-list">
+    <div 
+      class="property-item"
+      *ngFor="let property of properties; let i = index"
+      (click)="viewPropertyDetails(property.id)"
+      (mouseenter)="setHoveredProperty(property.id)"
+      (mouseleave)="setHoveredProperty(null)"
+      [class.is-featured]="property.featured"
+      [style.animation-delay]="i * 0.05 + 's'"
+    >
+      <!-- Property Number -->
+      <div class="property-number">
+        <span>{{ (i + 1).toString().padStart(2, '0') }}</span>
+      </div>
+
+      <!-- Property Image -->
+      <div class="property-image-section">
+        <div class="image-wrapper">
+          <img [src]="property.image" [alt]="property.name" class="property-image" />
+          
+          <!-- Image Overlay -->
+          <div class="image-overlay">
+            <button class="overlay-btn wishlist-btn" (click)="toggleWishlist($event, property)">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 17.5s-7-4-7-9.5a3.5 3.5 0 0 1 7-0.5 3.5 3.5 0 0 1 7 0.5c0 5.5-7 9.5-7 9.5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              </svg>
+            </button>
+            <span class="image-count" *ngIf="property.gallery.length > 1">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M14 2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM2 6v6a2 2 0 0 0 2 2h6v2H4a4 4 0 0 1-4-4V6h2z"/>
+              </svg>
+              {{ property.gallery.length }}
+            </span>
+          </div>
+
+          <!-- Property Badges -->
+          <div class="property-badges">
+            <span class="badge featured" *ngIf="property.featured">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                <path d="M6 1l1.5 3.5L11 5l-2.5 2.5L9 11l-3-2-3 2 .5-3.5L1 5l3.5-.5L6 1z"/>
+              </svg>
+              Featured
+            </span>
+            <span class="badge verified" *ngIf="property.verified">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Verified
+            </span>
+            <span class="badge discount" *ngIf="property.originalPrice">
+              {{ getDiscountPercent(property) }}% OFF
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property Content -->
+      <div class="property-content">
+        <!-- Category & Type -->
+        <div class="property-meta">
+          <span class="property-category" [style.color]="getCategoryColor(property.category)">
+            {{ property.category }}
+          </span>
+          <span class="meta-separator">·</span>
+          <span class="property-type">{{ property.type }}</span>
+          <span class="meta-separator">·</span>
+          <span class="property-posted">{{ property.postedDate }}</span>
+        </div>
+
+        <!-- Property Name -->
+        <h2 class="property-name">{{ property.name }}</h2>
+
+        <!-- Location -->
+        <div class="property-location">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 13s-5-3.5-5-7.5a5 5 0 1 1 10 0c0 4-5 7.5-5 7.5z" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="7" cy="5.5" r="1.5" fill="currentColor"/>
+          </svg>
+          <span class="location-text">{{ property.location }}</span>
+        </div>
+
+        <!-- Description -->
+        <p class="property-description">{{ property.description }}</p>
+
+        <!-- Property Features -->
+        <div class="property-features">
+          <div class="feature-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="2" width="12" height="12" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M2 6h12M6 2v12" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            <span>{{ property.area }} sq ft</span>
+          </div>
+          <div class="feature-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="4" width="12" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M5 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
+            </svg>
+            <span>{{ property.bedrooms }} BHK</span>
+          </div>
+          <div class="feature-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="3" y="6" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6 6V4a2 2 0 0 1 4 0v2" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            <span>{{ property.bathrooms }} Bath</span>
+          </div>
+          <div class="feature-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>{{ property.furnishing }}</span>
+          </div>
+        </div>
+
+        <!-- Amenities Tags -->
+        <div class="property-tags">
+          <span class="tag" *ngFor="let tag of property.tags.slice(0, 3)">
+            {{ tag }}
+          </span>
+          <span class="tag-more" *ngIf="property.tags.length > 3">
+            +{{ property.tags.length - 3 }}
+          </span>
+        </div>
+
+        <!-- Distance -->
+        <div class="property-distance">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M7 3.5v3.5l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>{{ property.distance }}</span>
+        </div>
+
+        <!-- Rating & Reviews -->
+        <div class="property-rating">
+          <div class="stars">
+            <svg *ngFor="let star of getStarArray(property.rating)" width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <path d="M7 1l1.5 3.5L12 5l-2.5 2.5L10 11l-3-2-3 2 .5-3.5L2 5l3.5-.5L7 1z"/>
+            </svg>
+            <svg *ngIf="hasHalfStar(property.rating)" width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <path d="M7 1l1.5 3.5L12 5l-2.5 2.5L10 11l-3-2v-9z"/>
+            </svg>
+          </div>
+          <span class="rating-value">{{ property.rating }}</span>
+          <span class="rating-reviews">({{ property.reviews }} reviews)</span>
+        </div>
+      </div>
+
+      <!-- Property Sidebar -->
+      <div class="property-sidebar">
+        <!-- Price Section -->
+        <div class="price-section">
+          <div class="price-wrapper">
+            <span class="price-label">Monthly Rent</span>
+            <div class="price-container">
+              <span class="original-price" *ngIf="property.originalPrice">₹{{ property.originalPrice | number }}</span>
+              <span class="current-price">₹{{ property.price | number }}</span>
+            </div>
+            <span class="price-period">per month</span>
+          </div>
+
+          <!-- Availability -->
+          <div class="availability-badge" [class.immediate]="property.available === 'Immediate'">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6 3v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            {{ property.available }}
+          </div>
+        </div>
+
+        <!-- Owner Info -->
+        <div class="owner-info">
+          <img [src]="property.ownerImage" [alt]="property.ownerName" class="owner-avatar" />
+          <div class="owner-details">
+            <span class="owner-label">Owner</span>
+            <span class="owner-name">{{ property.ownerName }}</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-primary" (click)="scheduleVisit($event, property)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M5 1v3M11 1v3M2 6h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Schedule Visit
+          </button>
+          <button class="btn btn-secondary" (click)="contactOwner($event, property)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 3h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M1 4l7 5 7-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Contact
+          </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+          <div class="stat-row">
+            <span class="stat-label">Gender</span>
+            <span class="stat-value">{{ property.gender || 'N/A' }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Type</span>
+            <span class="stat-value">{{ property.type }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="properties.length === 0">
+    <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+      <circle cx="60" cy="60" r="50" stroke="#E5E7EB" stroke-width="2" stroke-dasharray="4 4"/>
+      <path d="M60 40v40M40 60h40" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <h3>No properties found</h3>
+    <p>Check back later for new listings</p>
+  </div>
+</div>
