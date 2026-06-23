@@ -478,3 +478,76 @@
   }
 }
 
+/* =====================================================
+   ADD THESE STYLES TO YOUR header.component.css
+   ===================================================== */
+
+/* Desktop nav — Register Your Hostel highlight */
+.nav-link-hostel {
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  color: #f6c90e !important;
+  padding: 7px 14px !important;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1.5px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.nav-link-hostel svg {
+  stroke: #f6c90e !important;
+}
+
+.nav-link-hostel:hover {
+  background: transparent;
+  border-color: #0f3460;
+  color: #0f3460 !important;
+}
+
+.nav-link-hostel:hover svg {
+  stroke: #0f3460 !important;
+}
+
+.nav-link-hostel.active {
+  background: #0f3460;
+  color: #f6c90e !important;
+}
+
+/* Dropdown — Register Your Hostel item */
+.dropdown-item-hostel {
+  color: #0f3460 !important;
+  font-weight: 600;
+}
+
+.dropdown-item-hostel svg {
+  stroke: #0f3460 !important;
+}
+
+.dropdown-item-hostel:hover {
+  background: #f0f4ff;
+  color: #0f3460 !important;
+}
+
+/* Mobile nav — Register Your Hostel highlight */
+.mobile-nav-link-hostel {
+  background: linear-gradient(135deg, #1a1a2e14, #0f346014);
+  color: #0f3460 !important;
+  font-weight: 700;
+  border-left: 3px solid #f6c90e;
+  border-radius: 8px;
+}
+
+.mobile-nav-link-hostel svg {
+  stroke: #0f3460 !important;
+}
+
+.mobile-nav-link-hostel:hover,
+.mobile-nav-link-hostel.active {
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  color: #f6c90e !important;
+  border-left-color: #f6c90e;
+}
+
+.mobile-nav-link-hostel:hover svg,
+.mobile-nav-link-hostel.active svg {
+  stroke: #f6c90e !important;
+}

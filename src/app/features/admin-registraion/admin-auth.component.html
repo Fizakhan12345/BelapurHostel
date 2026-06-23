@@ -1,0 +1,242 @@
+<!-- admin-auth.component.html -->
+ <div style="margin-top: 50px;"></div>
+<div class="auth-root">
+  <!-- Left Panel -->
+  <div class="left-panel">
+    <div class="brand">
+      <div class="brand-icon">🏠</div>
+      <h1>Belapur Hostel</h1>
+      <p class="tagline">Mumbai's #1 PG & Hostel Network</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-num">2,400+</span>
+        <span class="stat-label">Listed Properties</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">₹0</span>
+        <span class="stat-label">Listing Fee</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">5,000+</span>
+        <span class="stat-label">Happy Tenants</span>
+      </div>
+    </div>
+
+    <div class="perks">
+      <div class="perk" *ngFor="let p of perks">
+        <span class="perk-icon">{{ p.icon }}</span>
+        <div>
+          <strong>{{ p.title }}</strong>
+          <p>{{ p.desc }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="commission-badge">
+      <span class="badge-label">💰 Earn more tenants, we handle bookings</span>
+      <span class="badge-sub">You list. We market. Tenants arrive.</span>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <div class="auth-card">
+
+      <!-- Tab Toggle -->
+      <div class="tab-toggle">
+        <button
+          [class.active]="activeTab === 'login'"
+          (click)="activeTab = 'login'">
+          Admin Login
+        </button>
+        <button
+          [class.active]="activeTab === 'register'"
+          (click)="activeTab = 'register'">
+          Register Property
+        </button>
+      </div>
+
+      <!-- ===== LOGIN FORM ===== -->
+      <div *ngIf="activeTab === 'login'" class="form-section">
+        <h2>Welcome Back, Admin 👋</h2>
+        <p class="form-sub">Manage your PG bookings and commissions</p>
+
+        <form (ngSubmit)="onLogin()">
+          <div class="form-group">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <span class="inp-icon">✉</span>
+              <input
+                type="email"
+                [(ngModel)]="loginForm.email"
+                name="email"
+                placeholder="admin@yourhostel.com"
+                required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrap">
+              <span class="inp-icon">🔒</span>
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                [(ngModel)]="loginForm.password"
+                name="password"
+                placeholder="Enter your password"
+                required />
+              <button type="button" class="eye-btn" (click)="showPassword = !showPassword">
+                {{ showPassword ? '🙈' : '👁' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="loginForm.remember" name="remember" />
+              Remember me
+            </label>
+            <a href="/forgot-password" class="forgot">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn-primary" [disabled]="loading">
+            <span *ngIf="!loading">Login to Dashboard →</span>
+            <span *ngIf="loading" class="spinner">⏳ Logging in...</span>
+          </button>
+
+          <div class="divider"><span>or</span></div>
+
+          <button type="button" class="btn-google">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" />
+            Continue with Google
+          </button>
+        </form>
+
+        <p class="switch-text">
+          New hostel? <a (click)="activeTab = 'register'">Register your property →</a>
+        </p>
+      </div>
+
+      <!-- ===== REGISTER FORM ===== -->
+      <div *ngIf="activeTab === 'register'" class="form-section">
+        <h2>List Your Property 🏢</h2>
+        <p class="form-sub">Free listing. Earn tenants. We collect commission on bookings.</p>
+
+        <form (ngSubmit)="onRegister()">
+
+          <div class="section-label">👤 Admin Details</div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" [(ngModel)]="registerForm.adminName" name="adminName" placeholder="Ravi Sharma" required />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" [(ngModel)]="registerForm.phone" name="phone" placeholder="+91 98765 43210" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <span class="inp-icon">✉</span>
+              <input type="email" [(ngModel)]="registerForm.email" name="email" placeholder="admin@yourhostel.com" required />
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Password</label>
+              <input [type]="showRegPassword ? 'text' : 'password'" [(ngModel)]="registerForm.password" name="password" placeholder="Min 8 characters" required />
+            </div>
+            <div class="form-group">
+              <label>Confirm Password</label>
+              <input [type]="showRegPassword ? 'text' : 'password'" [(ngModel)]="registerForm.confirmPassword" name="confirmPassword" placeholder="Repeat password" required />
+            </div>
+          </div>
+
+          <div class="section-label">🏠 Property Details</div>
+
+          <div class="form-group">
+            <label>Property / Hostel Name</label>
+            <input type="text" [(ngModel)]="registerForm.propertyName" name="propertyName" placeholder="e.g. Sunrise Boys PG, Belapur" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Property Type</label>
+              <select [(ngModel)]="registerForm.propertyType" name="propertyType">
+                <option value="">Select type</option>
+                <option *ngFor="let t of propertyTypes" [value]="t.value">{{ t.label }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Total Beds / Rooms</label>
+              <input type="number" [(ngModel)]="registerForm.totalRooms" name="totalRooms" placeholder="e.g. 20" min="1" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Full Address</label>
+            <input type="text" [(ngModel)]="registerForm.address" name="address" placeholder="Building, Street, Area, Mumbai" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" [(ngModel)]="registerForm.city" name="city" placeholder="Mumbai" required />
+            </div>
+            <div class="form-group">
+              <label>Monthly Rent (₹)</label>
+              <input type="number" [(ngModel)]="registerForm.rent" name="rent" placeholder="e.g. 8000" min="1000" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Amenities Offered</label>
+            <div class="amenity-grid">
+              <label class="checkbox-label" *ngFor="let a of amenities">
+                <input type="checkbox" [(ngModel)]="a.checked" [name]="a.value" />
+                {{ a.label }}
+              </label>
+            </div>
+          </div>
+
+          <div class="commission-notice">
+            <span>💡</span>
+            <p>
+              <strong>Commission Model:</strong> You list for FREE. When a tenant books through our platform,
+              we charge a one-time commission of <strong>₹500–₹2,000</strong> (based on rent).
+              No hidden charges. No monthly fees.
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label terms">
+              <input type="checkbox" [(ngModel)]="registerForm.agreed" name="agreed" required />
+              I agree to the <a href="/terms">Terms of Service</a> & commission policy
+            </label>
+          </div>
+
+          <button type="submit" class="btn-primary" [disabled]="loading || !registerForm.agreed">
+            <span *ngIf="!loading">Register My Property 🚀</span>
+            <span *ngIf="loading">⏳ Submitting...</span>
+          </button>
+        </form>
+
+        <p class="switch-text">
+          Already listed? <a (click)="activeTab = 'login'">Login to your dashboard →</a>
+        </p>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="successMsg" class="success-toast">
+        ✅ {{ successMsg }}
+      </div>
+
+    </div>
+  </div>
+</div>

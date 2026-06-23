@@ -14,6 +14,15 @@ export const routes: Routes = [
     path: 'properties',
     loadComponent: () => import('./features/properties/properties').then(m => m.Properties)
   },
+{
+  path: 'register-your-hostel',
+  loadComponent: () => import('./features/admin-registraion/admin-auth.component')
+    .then(m => m.AdminAuthComponent)
+},
+// {
+//   path: 'properties/:id',
+//   loadComponent: () => import('./features/properties/property-detail/property-detail').then(m => m.PropertyDetailComponent)
+// },
   // {
   //   path: 'properties/:id',
   //   renderMode: RenderMode.Server  // Use SSR instead of prerender
