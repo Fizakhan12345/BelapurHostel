@@ -1,64 +1,54 @@
-import { Routes } from '@angular/router';
-import { CityDetailComponent } from './features/cities-view/city-detail.component';
-import { CitiesListComponent } from './features/cities-list/cities-list.component';
-import { FindHostelComponent } from './features/property-search/find-hostel';
+import { RenderMode, ServerRoute } from '@angular/ssr';
 
-export const routes: Routes = [
+export const serverRoutes: ServerRoute[] = [
+  // Static/simple pages — safe to prerender at build time
+  { path: '', renderMode: RenderMode.Prerender },
+  { path: 'home', renderMode: RenderMode.Prerender },
+  { path: 'properties', renderMode: RenderMode.Prerender },
+  { path: 'cities', renderMode: RenderMode.Prerender },
+  { path: 'find-hostel', renderMode: RenderMode.Prerender },
+  { path: 'register-your-hostel', renderMode: RenderMode.Prerender },
+  { path: 'login', renderMode: RenderMode.Prerender },
+  { path: 'register', renderMode: RenderMode.Prerender },
+  { path: 'contact', renderMode: RenderMode.Prerender },
+  { path: 'services', renderMode: RenderMode.Prerender },
+  { path: 'help', renderMode: RenderMode.Prerender },
+
+  // Dynamic route — this is the one that was failing.
+  // Prerendered with a known list of slugs via getPrerenderParams.
+  // If your city list is fixed/small, this generates a static page per city (best for SEO/speed).
   {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    path: 'cities/:slug',
+    renderMode: RenderMode.Prerender,
+    async getPrerenderParams() {
+      // TODO: replace this hardcoded list with a real fetch from your
+      // API/service/JSON file if the city list can change without a rebuild.
+      // Example with a fetch:
+      //   const res = await fetch('https://your-api.com/cities');
+      //   const cities = await res.json();
+      //   return cities.map((city: { slug: string }) => ({ slug: city.slug }));
+
+      const citySlugs = [
+        'mumbai',
+        'pune',
+        'delhi',
+        'bangalore',
+        'hyderabad',
+        'chennai',
+        'kolkata',
+        'ahmedabad',
+        'jaipur',
+        'nagpur'
+      ];
+
+      return citySlugs.map(slug => ({ slug }));
+    }
   },
-  {
-    path: 'home',
-    loadComponent: () => import('./features/home/home').then(m => m.Home)
-  },
-  {
-    path: 'properties',
-    loadComponent: () => import('./features/properties/properties').then(m => m.Properties)
-  },
-  { path: 'cities', component: CitiesListComponent },
-  { path: 'cities/:slug', component: CityDetailComponent },
-    { path: 'find-hostel', component: FindHostelComponent },
-{
-  path: 'register-your-hostel',
-  loadComponent: () => import('./features/admin-registraion/admin-auth.component')
-    .then(m => m.AdminAuthComponent)
-},
-// {
-//   path: 'properties/:id',
-//   loadComponent: () => import('./features/properties/property-detail/property-detail').then(m => m.PropertyDetailComponent)
-// },
-  // {
-  //   path: 'properties/:id',
-  //   renderMode: RenderMode.Server  // Use SSR instead of prerender
-  // }
-  // {
-  //   path: 'booking/:id',
-  //   loadComponent: () => import('./features/booking/booking').then(m => m.Booking)
-  // },
-  {
-    path: 'login',
-    loadComponent: () => import('./features/auth/login/login').then(m => m.Login)
-  },
-  {
-    path: 'register',
-    loadComponent: () => import('./features/auth/register/register').then(m => m.Register)
-  },
-  {
-    path: 'contact',
-    loadComponent: () => import('./features/Contact/contact').then(m => m.Contact)
-  },
-    {
-    path: 'services',
-    loadComponent: () => import('./features/OurServices/ourservices').then(m => m.OurServicesComponent)
-  },
-      {
-    path: 'help',
-    loadComponent: () => import('./features/Help/help').then(m => m.HelpComponent)
-  },
+
+  // Catch-all — anything not explicitly listed above falls back to
+  // client-side rendering at request time instead of failing the build.
   {
     path: '**',
-    redirectTo: 'home'
+    renderMode: RenderMode.Client
   }
 ];
