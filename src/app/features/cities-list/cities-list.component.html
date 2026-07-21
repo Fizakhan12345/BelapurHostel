@@ -1,0 +1,37 @@
+<section class="cities-hero" style="margin-top: 20px;">
+  <span class="cities-hero__badge">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    Explore by city
+  </span>
+  <h1>Find hostels &amp; PGs across India</h1>
+  <p>Browse verified stays city by city — broker-free, always.</p>
+</section>
+
+<section class="cities-page">
+  <div class="cities-loading" *ngIf="loading">
+    <span class="spinner"></span>
+    <span>Loading cities…</span>
+  </div>
+
+  <div class="cities-grid" *ngIf="!loading">
+    <div
+      class="city-card"
+      *ngFor="let city of cities"
+      (click)="openCity(city.slug)"
+      [style.backgroundImage]="city.thumb_image_url ? 'url(' + city.thumb_image_url + ')' : null">
+      <div class="city-card__overlay">
+        <div class="city-card__top">
+          <span class="city-card__state" *ngIf="city.state">{{ city.state }}</span>
+        </div>
+        <div class="city-card__bottom">
+          <h3>{{ city.name }}</h3>
+          <span class="city-card__count">
+            {{ city.property_count }} {{ city.property_count === 1 ? 'stay' : 'stays' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

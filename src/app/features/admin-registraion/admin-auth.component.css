@@ -10,20 +10,29 @@
 
 :host {
   font-family: 'DM Sans', sans-serif;
+
+  /* ─── Canonical palette — keep identical in login/register CSS ─── */
+  --clr-navy-1: #1a1a2e;
+  --clr-navy-2: #16213e;
+  --clr-navy-3: #0f3460;
+  --clr-gold: #f6c90e;
+  --clr-outer-bg: #f7f5f0;
+  --clr-slate: #90adc4;
+  --clr-border: #e2e8f0;
 }
 
 /* ─── ROOT LAYOUT ─────────────────────────────────────── */
 .auth-root {
   display: flex;
   min-height: 100vh;
-  background: #f7f5f0;
+  background: var(--clr-outer-bg);
 }
 
 /* ─── LEFT PANEL ──────────────────────────────────────── */
 .left-panel {
   width: 420px;
   min-width: 380px;
-  background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(160deg, var(--clr-navy-1) 0%, var(--clr-navy-2) 50%, var(--clr-navy-3) 100%);
   color: #fff;
   padding: 48px 40px;
   display: flex;
@@ -81,12 +90,12 @@
   font-family: 'Sora', sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #f6c90e;
+  color: var(--clr-gold);
 }
 
 .stat-label {
   font-size: 0.7rem;
-  color: #90adc4;
+  color: var(--clr-slate);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -126,7 +135,7 @@
 
 .perk p {
   font-size: 0.78rem;
-  color: #90adc4;
+  color: var(--clr-slate);
   line-height: 1.4;
 }
 
@@ -145,12 +154,25 @@
   font-family: 'Sora', sans-serif;
   font-size: 0.875rem;
   font-weight: 700;
-  color: #f6c90e;
+  color: var(--clr-gold);
 }
 
 .badge-sub {
   font-size: 0.78rem;
   color: #a0aec0;
+}
+
+.badge-link {
+  margin-top: 4px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--clr-gold);
+  text-decoration: none;
+}
+
+.badge-link:hover {
+  text-decoration: underline;
 }
 
 /* ─── RIGHT PANEL ──────────────────────────────────────── */
@@ -183,6 +205,7 @@
   gap: 4px;
 }
 
+.tab-toggle a,
 .tab-toggle button {
   flex: 1;
   padding: 10px 16px;
@@ -194,12 +217,15 @@
   font-weight: 600;
   color: #777;
   cursor: pointer;
+  text-align: center;
+  text-decoration: none;
   transition: all 0.25s ease;
 }
 
+.tab-toggle a.active,
 .tab-toggle button.active {
-  background: #1a1a2e;
-  color: #f6c90e;
+  background: var(--clr-navy-1);
+  color: var(--clr-gold);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -208,7 +234,7 @@
   font-family: 'Sora', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--clr-navy-1);
   margin-bottom: 4px;
 }
 
@@ -224,7 +250,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #0f3460;
+  color: var(--clr-navy-3);
   margin: 24px 0 16px;
   padding-bottom: 8px;
   border-bottom: 2px solid #f0f0f0;
@@ -267,7 +293,7 @@ input[type="number"],
 select {
   width: 100%;
   padding: 12px 16px;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--clr-border);
   border-radius: 10px;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.9rem;
@@ -279,7 +305,7 @@ select {
 
 input:focus,
 select:focus {
-  border-color: #0f3460;
+  border-color: var(--clr-navy-3);
   box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.08);
   background: #fff;
 }
@@ -328,12 +354,12 @@ select:focus {
 .checkbox-label input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #0f3460;
+  accent-color: var(--clr-navy-3);
 }
 
 .forgot {
   font-size: 0.82rem;
-  color: #0f3460;
+  color: var(--clr-navy-3);
   text-decoration: none;
   font-weight: 600;
 }
@@ -350,15 +376,15 @@ select:focus {
   background: #f7f9fc;
   border-radius: 10px;
   padding: 16px;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--clr-border);
 }
 
 /* ─── BUTTONS ──────────────────────────────────────────── */
 .btn-primary {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #1a1a2e, #0f3460);
-  color: #f6c90e;
+  background: linear-gradient(135deg, var(--clr-navy-1), var(--clr-navy-3));
+  color: var(--clr-gold);
   border: none;
   border-radius: 12px;
   font-family: 'Sora', sans-serif;
@@ -394,13 +420,13 @@ select:focus {
   content: '';
   flex: 1;
   height: 1px;
-  background: #e2e8f0;
+  background: var(--clr-border);
 }
 
 .btn-google {
   width: 100%;
   padding: 12px;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid var(--clr-border);
   border-radius: 12px;
   background: #fff;
   font-family: 'DM Sans', sans-serif;
@@ -416,7 +442,7 @@ select:focus {
 }
 
 .btn-google:hover {
-  border-color: #0f3460;
+  border-color: var(--clr-navy-3);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -426,7 +452,7 @@ select:focus {
   gap: 12px;
   align-items: flex-start;
   background: linear-gradient(135deg, #fff9e6, #fffef0);
-  border: 1.5px solid #f6c90e;
+  border: 1.5px solid var(--clr-gold);
   border-radius: 12px;
   padding: 16px;
   margin: 20px 0 16px;
@@ -440,7 +466,116 @@ select:focus {
 }
 
 .commission-notice strong {
-  color: #1a1a2e;
+  color: var(--clr-navy-1);
+}
+
+/* ─── PAYMENT & PAYOUT ─────────────────────────────────── */
+.payment-intro {
+  font-size: 0.82rem;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.payment-intro strong {
+  color: var(--clr-navy-1);
+}
+
+.payment-toggle {
+  display: flex;
+  background: #f0f0f0;
+  border-radius: 10px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+
+.payment-toggle button {
+  flex: 1;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #777;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-toggle button.active {
+  background: var(--clr-navy-1);
+  color: var(--clr-gold);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.payment-fields {
+  background: #f7f9fc;
+  border: 1.5px solid var(--clr-border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.payment-fields .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.payment-secure-note {
+  font-size: 0.76rem;
+  color: #8a97a8;
+  line-height: 1.5;
+  margin: 4px 0 18px;
+}
+
+/* Instant verify addon */
+.verify-addon {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1.5px solid var(--clr-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.verify-addon.checked {
+  border-color: var(--clr-gold);
+  background: linear-gradient(135deg, #fff9e6, #fffef0);
+}
+
+.verify-addon input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--clr-navy-3);
+  flex-shrink: 0;
+}
+
+.verify-addon strong {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  color: var(--clr-navy-1);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.verify-addon p {
+  font-size: 0.76rem;
+  color: #777;
+  line-height: 1.4;
+}
+
+.verify-price {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--clr-navy-3);
+  white-space: nowrap;
+  margin-left: auto;
 }
 
 /* ─── SUCCESS TOAST ───────────────────────────────────── */
@@ -474,7 +609,7 @@ select:focus {
 }
 
 .switch-text a {
-  color: #0f3460;
+  color: var(--clr-navy-3);
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
@@ -485,7 +620,7 @@ select:focus {
 }
 
 .terms a {
-  color: #0f3460;
+  color: var(--clr-navy-3);
   text-decoration: underline;
 }
 
@@ -532,5 +667,17 @@ select:focus {
 
   .form-row-2 {
     grid-template-columns: 1fr;
+  }
+
+  .payment-toggle {
+    flex-direction: column;
+  }
+
+  .verify-addon {
+    flex-wrap: wrap;
+  }
+
+  .verify-price {
+    margin-left: 0;
   }
 }

@@ -9,11 +9,11 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './contact.html',
   styleUrls: ['./contact.css']
 })
-export class Contact{
+export class Contact {
   isChatOpen = false;
   messageInput = '';
-  whatsappNumber = '919876543210'; // Replace with your WhatsApp number
-  
+  whatsappNumber = '917021455426'; // +91 7021455426
+
   toggleChat() {
     this.isChatOpen = !this.isChatOpen;
   }
@@ -38,10 +38,10 @@ export class Contact{
   }
 
   makeCall() {
-    window.location.href = 'tel:+919876543210';
+    window.location.href = 'tel:+917021455426';
   }
 
   sendEmail() {
-    window.location.href = 'mailto:contact@bedrindia.com';
+    window.location.href = 'mailto:fizakhan60611@gmail.com';
   }
 }

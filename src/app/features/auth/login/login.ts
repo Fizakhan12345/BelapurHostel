@@ -14,13 +14,54 @@ export class Login {
   email: string = '';
   password: string = '';
   rememberMe: boolean = false;
+  showPassword: boolean = false;
+
+  loading: boolean = false;
+  successMsg: string = '';
+
+  // Left-panel perks, rendered with *ngFor in login.html
+  perks = [
+    {
+      icon: '✅',
+      title: 'Verified Listings',
+      desc: 'Every hostel and PG is checked before it goes live.'
+    },
+    {
+      icon: '💬',
+      title: 'Direct Messaging',
+      desc: 'Talk to owners directly — no brokers, no markup.'
+    },
+    {
+      icon: '⭐',
+      title: 'Real Reviews',
+      desc: 'Ratings from tenants who actually stayed there.'
+    }
+  ];
 
   constructor(private router: Router) {}
 
-  onSubmit() {
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  onSubmit(): void {
+    if (!this.email || !this.password) {
+      console.warn('Please fill in all fields.');
+      return;
+    }
+
+    this.loading = true;
+
     console.log('Login attempt:', { email: this.email, password: this.password });
-    // Add authentication logic here
-    // For now, just redirect to home
-    this.router.navigate(['/home']);
+
+    // 🔌 Replace with real API call: this.authService.login({ email, password, rememberMe })
+    setTimeout(() => {
+      this.loading = false;
+      this.successMsg = 'Login successful! Redirecting...';
+
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 1000);
+    }, 1200);
   }
 }

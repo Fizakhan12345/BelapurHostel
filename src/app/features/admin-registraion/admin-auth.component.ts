@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-admin-auth',
   templateUrl: './admin-auth.component.html',
-    standalone: true,
-  imports: [FormsModule, CommonModule], 
+  standalone: true,
+  imports: [FormsModule, CommonModule],
   styleUrls: ['./admin-auth.component.css']
 })
 export class AdminAuthComponent {
@@ -40,6 +41,23 @@ export class AdminAuthComponent {
     rent: null,
     agreed: false
   };
+
+  // ─── Payment / Payout Details ─────────────────────────
+  paymentMethod: 'upi' | 'card' | 'netbanking' = 'upi';
+
+  paymentForm = {
+    upiId: '',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCvv: '',
+    cardName: '',
+    bankName: ''
+  };
+
+  instantVerify = false; // optional ₹199 instant-verification addon
+  readonly instantVerifyFee = 199;
+
+  processingPayment = false;
 
   // ─── Static Data ──────────────────────────────────────
   perks = [
@@ -85,6 +103,11 @@ export class AdminAuthComponent {
     { label: '📺 TV Lounge', value: 'tv', checked: false }
   ];
 
+  banks = [
+    'HDFC Bank', 'ICICI Bank', 'State Bank of India', 'Axis Bank',
+    'Kotak Mahindra Bank', 'Punjab National Bank', 'Bank of Baroda', 'IDFC FIRST Bank'
+  ];
+
   constructor(private router: Router) {}
 
   // ─── Login Handler ────────────────────────────────────
@@ -107,10 +130,34 @@ export class AdminAuthComponent {
     }, 1500);
   }
 
+  // ─── Payment validation helper ────────────────────────
+  private isPaymentValid(): boolean {
+    if (this.paymentMethod === 'upi') {
+      return !!this.paymentForm.upiId && this.paymentForm.upiId.includes('@');
+    }
+    if (this.paymentMethod === 'card') {
+      return !!(
+        this.paymentForm.cardNumber &&
+        this.paymentForm.cardExpiry &&
+        this.paymentForm.cardCvv &&
+        this.paymentForm.cardName
+      );
+    }
+    if (this.paymentMethod === 'netbanking') {
+      return !!this.paymentForm.bankName;
+    }
+    return false;
+  }
+
   // ─── Register Handler ─────────────────────────────────
   onRegister(): void {
     if (this.registerForm.password !== this.registerForm.confirmPassword) {
       alert('Passwords do not match!');
+      return;
+    }
+
+    if (!this.isPaymentValid()) {
+      alert('Please add a valid payment method so we can bill commission after a booking.');
       return;
     }
 
@@ -127,20 +174,33 @@ export class AdminAuthComponent {
 
     const payload = {
       ...this.registerForm,
-      amenities: selectedAmenities
+      amenities: selectedAmenities,
+      paymentMethod: this.paymentMethod,
+      payment: this.paymentForm,
+      instantVerify: this.instantVerify,
+      instantVerifyFee: this.instantVerify ? this.instantVerifyFee : 0
     };
 
     console.log('Registration payload:', payload);
 
-    // 🔌 Replace with real API call: this.authService.registerAdmin(payload)
+    // 🔌 Replace with real API calls:
+    //   1. this.authService.registerAdmin(payload)
+    //   2. if (this.instantVerify) this.paymentService.charge(this.instantVerifyFee, this.paymentForm)
+    if (this.instantVerify) {
+      this.processingPayment = true;
+    }
+
     setTimeout(() => {
       this.loading = false;
-      this.successMsg = 'Property registered! Check your email to activate your account.';
+      this.processingPayment = false;
+      this.successMsg = this.instantVerify
+        ? `Payment of ₹${this.instantVerifyFee} received! Property registered and verified. Check your email to activate your account.`
+        : 'Property registered! Check your email to activate your account.';
 
       setTimeout(() => {
         this.activeTab = 'login';
         this.successMsg = '';
-      }, 3000);
-    }, 2000);
+      }, 3500);
+    }, this.instantVerify ? 2800 : 2000);
   }
 }

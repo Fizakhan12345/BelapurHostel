@@ -1,0 +1,142 @@
+<div class="find-page">
+
+  <!-- ── HERO ── -->
+  <section class="find-hero" style="margin-top: 20px;">
+    <span class="find-hero__badge">🔍 FIND YOUR STAY</span>
+    <h1 class="find-hero__title">Find hostels &amp; PGs <span class="accent">that fit your stay</span></h1>
+    <p class="find-hero__subtitle">Search by monthly rent for long stays, or daily rent for short-term visits.</p>
+  </section>
+
+  <!-- ── SEARCH PANEL ── -->
+  <section class="search-panel">
+    <div class="search-card">
+
+      <!-- Rent type tabs -->
+      <div class="rent-tabs">
+        <button
+          class="rent-tab"
+          [class.active]="rentType === 'monthly'"
+          (click)="switchRentType('monthly')">
+          <span class="rent-tab__icon">🗓️</span>
+          Monthly Rent
+        </button>
+        <button
+          class="rent-tab"
+          [class.active]="rentType === 'daily'"
+          (click)="switchRentType('daily')">
+          <span class="rent-tab__icon">☀️</span>
+          Daily Rent
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-row">
+        <div class="filter-field">
+          <label>City</label>
+          <select [(ngModel)]="filters.citySlug">
+            <option [ngValue]="undefined">All cities</option>
+            <option *ngFor="let c of cities" [value]="c.slug">{{ c.name }}</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label>Property type</label>
+          <select [(ngModel)]="filters.propertyType">
+            <option [ngValue]="undefined">Any type</option>
+            <option value="hostel">Hostel</option>
+            <option value="pg">PG</option>
+            <option value="apartment">Apartment</option>
+            <option value="room">Room</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label>Gender</label>
+          <select [(ngModel)]="filters.genderAllowed">
+            <option [ngValue]="undefined">Any</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label>Min ₹ / {{ rentType === 'daily' ? 'day' : 'month' }}</label>
+          <input type="number" [(ngModel)]="filters.minPrice" placeholder="0" min="0" />
+        </div>
+
+        <div class="filter-field">
+          <label>Max ₹ / {{ rentType === 'daily' ? 'day' : 'month' }}</label>
+          <input type="number" [(ngModel)]="filters.maxPrice" placeholder="Any" min="0" />
+        </div>
+
+        <div class="filter-field">
+          <label>Sort by</label>
+          <select [(ngModel)]="filters.sort">
+            <option value="newest">Newest</option>
+            <option value="price_low">Price: Low to High</option>
+            <option value="price_high">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+
+        <button class="search-btn" (click)="applyFilters()">Search →</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── RESULTS ── -->
+  <section class="results-section">
+    <div class="container">
+
+      <div class="results-loading" *ngIf="loading">
+        <span class="spinner"></span>
+        <span>Finding stays…</span>
+      </div>
+
+      <ng-container *ngIf="!loading">
+        <div class="results-header" *ngIf="pagination">
+          <span>{{ pagination.total }} {{ pagination.total === 1 ? 'stay' : 'stays' }} found</span>
+          <span class="results-header__tag">{{ rentType === 'daily' ? 'Daily rent' : 'Monthly rent' }}</span>
+        </div>
+
+        <div class="results-empty" *ngIf="searched && properties.length === 0">
+          <span class="results-empty__icon">🔎</span>
+          <h3>No stays found</h3>
+          <p *ngIf="rentType === 'daily'">
+            Not many properties offer daily rent yet — try Monthly Rent instead, or widen your filters.
+          </p>
+          <p *ngIf="rentType === 'monthly'">Try adjusting your filters or price range.</p>
+        </div>
+
+        <div class="property-grid" *ngIf="properties.length">
+          <div class="property-card" *ngFor="let p of properties" (click)="viewProperty(p.id)">
+            <div class="property-card__image">
+              <img [src]="p.primary_image || placeholderImage" (error)="onImageError($event)" [alt]="p.name" />
+              <span class="badge-verified" *ngIf="p.is_verified">Verified</span>
+            </div>
+            <div class="property-card__body">
+              <h3>{{ p.name }}</h3>
+              <p class="area">{{ p.area }}, {{ p.city }}</p>
+              <div class="meta-row">
+                <span class="rent">
+                  ₹{{ p.starting_price | number }}<span>/{{ priceUnit }}</span>
+                </span>
+                <span class="rating" *ngIf="p.avg_rating">★ {{ p.avg_rating }} ({{ p.total_reviews }})</span>
+              </div>
+              <span class="tag">{{ p.property_type }} · {{ p.gender_allowed }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pagination" *ngIf="pagination && pagination.totalPages > 1">
+          <button [disabled]="pagination.page === 1" (click)="goToPage(pagination.page - 1)">← Prev</button>
+          <span>Page {{ pagination.page }} of {{ pagination.totalPages }}</span>
+          <button [disabled]="pagination.page === pagination.totalPages" (click)="goToPage(pagination.page + 1)">Next →</button>
+        </div>
+      </ng-container>
+
+    </div>
+  </section>
+
+</div>

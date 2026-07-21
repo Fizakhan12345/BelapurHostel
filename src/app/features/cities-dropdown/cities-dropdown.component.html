@@ -1,0 +1,24 @@
+<div class="cities-dropdown">
+  <button class="cities-dropdown__trigger" (click)="toggle()" [class.active]="isOpen">
+    Cities
+    <svg class="chevron" [class.flipped]="isOpen" width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <div class="cities-dropdown__panel" *ngIf="isOpen">
+    <div class="cities-dropdown__loading" *ngIf="loading">Loading cities…</div>
+
+    <a
+      *ngFor="let city of cities"
+      class="cities-dropdown__item"
+      (click)="selectCity(city.slug)">
+      <span class="city-name">{{ city.name }}</span>
+      <span class="city-count">{{ city.property_count }}</span>
+    </a>
+
+    <a class="cities-dropdown__all" routerLink="/cities" (click)="isOpen = false">
+      View all cities →
+    </a>
+  </div>
+</div>

@@ -55,7 +55,7 @@ export class Footer implements OnInit {
     { icon: '✓',  strong: '100% Verified',  label: 'Properties' },
     { icon: '🔒', strong: 'Secure',          label: 'Payments' },
     { icon: '💰', strong: 'Zero',            label: 'Brokerage' },
-    { icon: '⭐', strong: '5,000+',          label: 'Happy Tenants' },
+    { icon: '⭐', strong: '10,000+',         label: 'Happy Tenants' },
     { icon: '🏅', strong: 'ISO Certified',   label: 'Platform' },
     { icon: '📞', strong: '24×7',            label: 'Support' },
   ];

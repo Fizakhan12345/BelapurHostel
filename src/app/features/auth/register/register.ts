@@ -16,28 +16,64 @@ export class Register {
   phone: string = '';
   password: string = '';
   confirmPassword: string = '';
-  agreeToTerms: boolean = false;
+  agreeTerms: boolean = false;
+  showPassword: boolean = false;
+
+  loading: boolean = false;
+  successMsg: string = '';
+
+  // Left-panel perks, rendered with *ngFor in register.html
+  perks = [
+    {
+      icon: '🎉',
+      title: 'Free to join',
+      desc: 'Create an account in under a minute, no fees.'
+    },
+    {
+      icon: '🔒',
+      title: 'Secure bookings',
+      desc: 'Your payments and data are always protected.'
+    },
+    {
+      icon: '📍',
+      title: 'Save your favorites',
+      desc: 'Shortlist hostels and PGs as you browse.'
+    }
+  ];
 
   constructor(private router: Router) {}
 
-  onSubmit() {
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  onSubmit(): void {
     if (this.password !== this.confirmPassword) {
-      alert('Passwords do not match!');
+      console.warn('Passwords do not match');
       return;
     }
 
-    if (!this.agreeToTerms) {
-      alert('Please agree to terms and conditions');
+    if (!this.agreeTerms) {
+      console.warn('Please agree to the Terms and Privacy Policy');
       return;
     }
 
-    console.log('Registration attempt:', {
+    this.loading = true;
+
+    console.log('Register attempt:', {
       fullName: this.fullName,
       email: this.email,
       phone: this.phone
     });
 
-    // Add registration logic here
-    this.router.navigate(['/login']);
+    // 🔌 Replace with real API call: this.authService.register({ fullName, email, phone, password })
+    setTimeout(() => {
+      this.loading = false;
+      this.successMsg = 'Account created! Redirecting...';
+
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 1000);
+    }, 1200);
   }
 }

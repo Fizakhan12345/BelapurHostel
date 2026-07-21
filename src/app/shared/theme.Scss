@@ -1,0 +1,25 @@
+// theme.scss — colors & type lifted from the existing HostelKhojo UI
+// Import this into component-level SCSS with:  @import 'src/app/shared/theme';
+
+:root {
+  --hk-navy-900: #17143a;   // hero / dark section background
+  --hk-navy-800: #211d4a;   // cards on dark background
+  --hk-navy-700: #2b2660;   // borders on dark background
+  --hk-orange:   #f4820c;   // primary accent (buttons, counts, highlights)
+  --hk-orange-dark: #d96e00;
+  --hk-white:    #ffffff;
+  --hk-ink:      #1a1a2e;   // body text on light background
+  --hk-muted:    #a9a6c9;   // secondary text on dark background
+  --hk-muted-light: #6b7280; // secondary text on light background
+  --hk-border-light: #e5e7eb;
+  --hk-success:  #16a34a;
+
+  --hk-font-display: Georgia, 'Times New Roman', serif;   // big serif headline
+  --hk-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --hk-font-mono: 'Space Mono', 'Courier New', monospace; // badges / stat chips
+
+  --hk-radius-sm: 6px;
+  --hk-radius-md: 10px;
+  --hk-radius-lg: 16px;
+  --hk-radius-pill: 999px;
+}

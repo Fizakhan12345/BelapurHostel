@@ -1,6 +1,7 @@
 // properties.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 interface Property {
@@ -33,19 +34,46 @@ interface Property {
   tags: string[];
 }
 
+type SortOption = 'featured' | 'price-low' | 'price-high' | 'rating' | 'newest';
+
+interface Toast {
+  id: number;
+  message: string;
+}
+
 @Component({
   selector: 'app-properties',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './properties.html',
   styleUrl: './properties.css',
 })
 export class Properties implements OnInit {
   properties: Property[] = [];
-  selectedProperty: Property | null = null;
-  hoveredPropertyId: number | null = null;
-verifiedCount: any;
-featured: any;
+  wishlistIds = new Set<number>();
+  toasts: Toast[] = [];
+  private toastCounter = 0;
+  whatsappNumber = '911234567890'; // TODO: replace with your real WhatsApp business number
+
+  get whatsappLink(): string {
+    const message = "Hi! I found your listings on HostelKhojo and would like to know more.";
+    return `https://wa.me/${this.whatsappNumber}?text=${encodeURIComponent(message)}`;
+  }
+
+  // Toolbar state
+  searchQuery = '';
+  selectedCategory = 'All';
+  sortBy: SortOption = 'featured';
+
+  categories: string[] = ['All', 'Luxury', 'Premium', 'Standard', 'Budget'];
+
+  sortOptions: { value: SortOption; label: string }[] = [
+    { value: 'featured', label: 'Featured First' },
+    { value: 'price-low', label: 'Price: Low to High' },
+    { value: 'price-high', label: 'Price: High to Low' },
+    { value: 'rating', label: 'Highest Rated' },
+    { value: 'newest', label: 'Newest Listed' },
+  ];
 
   constructor(private router: Router) {}
 
@@ -304,6 +332,67 @@ featured: any;
     ];
   }
 
+  // ---- Derived stats for header ----
+  get verifiedCount(): number {
+    return this.properties.filter(p => p.verified).length;
+  }
+
+  get featured(): number {
+    return this.properties.filter(p => p.featured).length;
+  }
+
+  // ---- Filtering + sorting ----
+  get filteredProperties(): Property[] {
+    const query = this.searchQuery.trim().toLowerCase();
+
+    let result = this.properties.filter(p => {
+      const matchesCategory = this.selectedCategory === 'All' || p.category === this.selectedCategory;
+      const matchesQuery =
+        !query ||
+        p.name.toLowerCase().includes(query) ||
+        p.location.toLowerCase().includes(query) ||
+        p.type.toLowerCase().includes(query);
+      return matchesCategory && matchesQuery;
+    });
+
+    switch (this.sortBy) {
+      case 'price-low':
+        result = result.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        result = result.sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        result = result.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'newest':
+        // properties are already ordered newest-first in source data
+        break;
+      case 'featured':
+      default:
+        result = result.sort((a, b) => Number(b.featured) - Number(a.featured));
+        break;
+    }
+
+    return result;
+  }
+
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
+  }
+
+  clearFilters(): void {
+    this.searchQuery = '';
+    this.selectedCategory = 'All';
+    this.sortBy = 'featured';
+  }
+
+  countForCategory(category: string): number {
+    if (category === 'All') return this.properties.length;
+    return this.properties.filter(p => p.category === category).length;
+  }
+
+  // ---- Actions ----
   viewPropertyDetails(propertyId: number): void {
     console.log('Viewing property:', propertyId);
     // this.router.navigate(['/property', propertyId]);
@@ -311,21 +400,42 @@ featured: any;
 
   toggleWishlist(event: Event, property: Property): void {
     event.stopPropagation();
-    console.log('Toggle wishlist for:', property.name);
+    if (this.wishlistIds.has(property.id)) {
+      this.wishlistIds.delete(property.id);
+      this.showToast(`Removed "${property.name}" from your wishlist`);
+    } else {
+      this.wishlistIds.add(property.id);
+      this.showToast(`Added "${property.name}" to your wishlist`);
+    }
+  }
+
+  isWishlisted(propertyId: number): boolean {
+    return this.wishlistIds.has(propertyId);
   }
 
   contactOwner(event: Event, property: Property): void {
     event.stopPropagation();
-    console.log('Contact owner:', property.ownerName);
+    this.showToast(`Contacting ${property.ownerName} about "${property.name}"…`);
+    // Hook up to your real contact flow here, e.g.:
+    // this.router.navigate(['/contact-owner', property.id]);
   }
 
   scheduleVisit(event: Event, property: Property): void {
     event.stopPropagation();
-    console.log('Schedule visit for:', property.name);
+    this.showToast(`Visit request sent for "${property.name}". The owner will confirm shortly.`);
+    // Hook up to your real scheduling flow here, e.g.:
+    // this.router.navigate(['/schedule-visit', property.id]);
   }
 
-  setHoveredProperty(propertyId: number | null): void {
-    this.hoveredPropertyId = propertyId;
+  // ---- Toast helper ----
+  showToast(message: string): void {
+    const id = ++this.toastCounter;
+    this.toasts.push({ id, message });
+    setTimeout(() => this.dismissToast(id), 3200);
+  }
+
+  dismissToast(id: number): void {
+    this.toasts = this.toasts.filter(t => t.id !== id);
   }
 
   getStarArray(rating: number): number[] {
@@ -336,18 +446,12 @@ featured: any;
     return rating % 1 >= 0.5;
   }
 
-  getCategoryColor(category: string): string {
-    const colors: { [key: string]: string } = {
-      'Luxury': '#8B5CF6',
-      'Premium': '#3B82F6',
-      'Standard': '#10B981',
-      'Budget': '#F59E0B'
-    };
-    return colors[category] || '#6B7280';
-  }
-
   getDiscountPercent(property: Property): number {
     if (!property.originalPrice) return 0;
     return Math.round(((property.originalPrice - property.price) / property.originalPrice) * 100);
+  }
+
+  trackByPropertyId(index: number, property: Property): number {
+    return property.id;
   }
 }

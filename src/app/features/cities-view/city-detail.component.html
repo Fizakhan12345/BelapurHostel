@@ -1,0 +1,97 @@
+<ng-container *ngIf="!notFound; else notFoundBlock">
+
+  <!-- Hero banner -->
+  <section
+    class="city-hero"
+    *ngIf="city as c"
+    [style.backgroundImage]="c.banner_image_url ? 'url(' + c.banner_image_url + ')' : null">
+    <div class="city-hero__overlay">
+      <span class="city-hero__badge">{{ c.property_count }}+ verified stays</span>
+      <h1 class="city-hero__title">Hostels &amp; PGs in {{ c.name }}</h1>
+      <p class="city-hero__subtitle" *ngIf="c.short_description">{{ c.short_description }}</p>
+    </div>
+  </section>
+
+  <section class="city-body">
+    <!-- Filters -->
+    <div class="city-filters">
+      <div class="select-wrap">
+        <select [(ngModel)]="filters.propertyType" (change)="applyFilters()">
+          <option [ngValue]="undefined">All types</option>
+          <option value="hostel">Hostel</option>
+          <option value="pg">PG</option>
+          <option value="apartment">Apartment</option>
+          <option value="room">Room</option>
+        </select>
+      </div>
+
+      <div class="select-wrap">
+        <select [(ngModel)]="filters.genderAllowed" (change)="applyFilters()">
+          <option [ngValue]="undefined">Any gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+
+      <div class="select-wrap">
+        <select [(ngModel)]="filters.sort" (change)="applyFilters()">
+          <option value="newest">Newest</option>
+          <option value="rent_low">Rent: Low to High</option>
+          <option value="rent_high">Rent: High to Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="city-loading" *ngIf="loading">
+      <span class="spinner"></span>
+      <span>Loading properties…</span>
+    </div>
+
+    <!-- Empty -->
+    <div class="city-empty" *ngIf="!loading && properties.length === 0">
+      No properties found in {{ city?.name }} yet. Check back soon!
+    </div>
+
+    <!-- Property grid -->
+    <div class="property-grid" *ngIf="!loading && properties.length">
+      <div class="property-card" *ngFor="let p of properties" (click)="viewProperty(p.id)">
+        <div class="property-card__image">
+          <img
+            [src]="p.primary_image || placeholderImage"
+            (error)="onImageError($event)"
+            [alt]="p.name" />
+          <span class="badge-verified" *ngIf="p.is_verified">Verified</span>
+        </div>
+        <div class="property-card__body">
+          <h3>{{ p.name }}</h3>
+          <p class="area">{{ p.area }}, {{ p.city }}</p>
+          <div class="meta-row">
+            <span class="rent">₹{{ p.monthly_rent | number }}<span>/mo</span></span>
+            <span class="rating" *ngIf="p.avg_rating">★ {{ p.avg_rating }} ({{ p.total_reviews }})</span>
+          </div>
+          <span class="tag">{{ p.property_type }} · {{ p.gender_allowed }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <ng-container *ngIf="pagination as p">
+      <div class="pagination" *ngIf="p.totalPages > 1">
+        <button [disabled]="p.page === 1" (click)="goToPage(p.page - 1)">← Prev</button>
+        <span>Page {{ p.page }} of {{ p.totalPages }}</span>
+        <button [disabled]="p.page === p.totalPages" (click)="goToPage(p.page + 1)">Next →</button>
+      </div>
+    </ng-container>
+  </section>
+
+</ng-container>
+
+<ng-template #notFoundBlock>
+  <div class="city-not-found">
+    <h2>City not found</h2>
+    <p>We don't have listings for this city yet.</p>
+    <a routerLink="/cities">Browse all cities</a>
+  </div>
+</ng-template>

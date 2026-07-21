@@ -6,17 +6,16 @@
     <div class="hero-bg">
       <div class="hero-orb orb-1"></div>
       <div class="hero-orb orb-2"></div>
-      <div class="hero-orb orb-3"></div>
       <div class="grid-overlay"></div>
     </div>
     <div class="hero-content">
-      <span class="hero-tag">BELAPUR HOSTEL SERVICES</span>
+      <span class="hero-tag">✓ Trusted by 500+ properties across India</span>
       <h1 class="hero-title">
-        <span class="title-line">World-Class</span>
-        <span class="title-line accent">Services</span>
+        <span class="title-line">Everything Your Property</span>
+        <span class="title-line accent">Needs, In One Place</span>
       </h1>
       <p class="hero-subtitle">
-        Experience unparalleled hospitality through our comprehensive suite of hotel management solutions, crafted to elevate every guest's journey.
+        From check-in to checkout, revenue to housekeeping — one platform built to run every corner of your hostel or hotel, without the broker, without the guesswork.
       </p>
       <div class="hero-stats">
         <div class="stat-item" *ngFor="let stat of stats">
@@ -43,6 +42,55 @@
           <span class="filter-icon">{{ cat.icon }}</span>
           <span>{{ cat.label }}</span>
         </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="services-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">WHAT WE OFFER</span>
+        <h2 class="section-title">Core <span class="accent-text">Services</span></h2>
+        <p class="section-desc">A complete management suite, modular enough to pick what you need and scale as you grow.</p>
+      </div>
+
+      <div class="services-grid">
+        <div
+          class="service-card"
+          *ngFor="let service of filteredServices"
+          (mouseenter)="onCardHover(service.id)"
+          (mouseleave)="onCardLeave()"
+          (click)="openService(service)">
+          <div class="card-glow" [style.background]="service.gradient"></div>
+          <div class="card-inner">
+            <div class="card-header">
+              <div class="service-icon-wrap" [style.background]="service.gradient">
+                <span>{{ service.icon }}</span>
+              </div>
+              <span class="card-badge" *ngIf="service.badge">{{ service.badge }}</span>
+            </div>
+            <div class="card-body">
+              <span class="service-category-tag">{{ service.categoryLabel }}</span>
+              <h3 class="service-title">{{ service.title }}</h3>
+              <p class="service-description">{{ service.description }}</p>
+              <ul class="service-features">
+                <li *ngFor="let feature of service.features.slice(0, 3)">
+                  <span class="feature-dot"></span>{{ feature }}
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer">
+              <div class="service-meta">
+                <span class="meta-item">🕐 {{ service.availability }}</span>
+                <span class="meta-item">★ {{ service.rating }}</span>
+              </div>
+              <button class="learn-btn">
+                Learn more <span class="btn-arrow">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -92,7 +140,7 @@
       <div class="availability-banner">
         <div class="avail-left">
           <span class="avail-pulse"></span>
-          <span class="avail-text">All essential services are <strong>live & operational</strong> right now</span>
+          <span class="avail-text">All essential services are <strong>live &amp; operational</strong> right now</span>
         </div>
         <div class="avail-right">
           <span class="avail-item" *ngFor="let av of availabilityBadges">
@@ -105,13 +153,90 @@
 
 
 
+  <!-- Pricing -->
+  <section class="pricing-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">PRICING</span>
+        <h2 class="section-title">Plans For Every <span class="accent-text">Property Size</span></h2>
+        <p class="section-desc">Straightforward pricing. No hidden fees, no lock-in contracts.</p>
+      </div>
 
+      <div class="pricing-toggle">
+        <span [class.active]="!isAnnual">Monthly</span>
+        <button class="toggle-btn" (click)="toggleBilling()">
+          <span class="toggle-knob" [class.annual]="isAnnual"></span>
+        </button>
+        <span [class.active]="isAnnual">Annual <em class="save-tag">Save 20%</em></span>
+      </div>
 
+      <div class="pricing-grid">
+        <div class="pricing-card" [class.popular]="plan.popular" *ngFor="let plan of pricingPlans">
+          <div class="plan-popular-badge" *ngIf="plan.popular">Most Popular</div>
+          <div class="plan-header">
+            <span class="plan-icon">{{ plan.icon }}</span>
+            <h3 class="plan-name">{{ plan.name }}</h3>
+            <p class="plan-desc">{{ plan.tagline }}</p>
+          </div>
+          <div class="plan-price">
+            <span class="currency">$</span>
+            <span class="amount">{{ isAnnual ? plan.annualPrice : plan.monthlyPrice }}</span>
+            <span class="period">/ month</span>
+          </div>
+          <ul class="plan-features">
+            <li *ngFor="let feature of plan.features" [class.unavailable]="!feature.included">
+              <span class="feat-icon">{{ feature.included ? '✓' : '✕' }}</span>{{ feature.name }}
+            </li>
+          </ul>
+          <button class="plan-btn" [class.popular-btn]="plan.popular" (click)="selectPlan(plan)">
+            {{ plan.cta }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-bg"></div>
+    <div class="cta-orb"></div>
+    <div class="cta-content">
+      <span class="cta-tag">READY WHEN YOU ARE</span>
+      <h2 class="cta-title">Let's Modernize <span class="accent-text">Your Property</span></h2>
+      <p class="cta-desc">Book a walkthrough with our team, or reach out directly — we'll help you find the right plan for your property.</p>
+      <div class="cta-actions">
+        <button class="cta-primary-btn" (click)="scheduleDemo()">Schedule a Demo</button>
+        <button class="cta-secondary-btn" (click)="contactUs()">Talk to Sales</button>
+      </div>
+    </div>
+  </section>
 
-
-
-
+  <!-- Service Detail Modal -->
+  <div class="modal-overlay" *ngIf="selectedService" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="closeModal()">✕</button>
+      <div class="modal-header" [style.background]="selectedService.gradient">
+        <span class="modal-icon">{{ selectedService.icon }}</span>
+        <h2>{{ selectedService.title }}</h2>
+        <p>{{ selectedService.description }}</p>
+      </div>
+      <div class="modal-body">
+        <div class="modal-stats">
+          <div class="modal-stat" *ngFor="let stat of selectedService.modalStats">
+            <span class="ms-value">{{ stat.value }}</span>
+            <span class="ms-label">{{ stat.label }}</span>
+          </div>
+        </div>
+        <h3>What's Included</h3>
+        <ul class="modal-features">
+          <li *ngFor="let feature of selectedService.features">
+            <span class="modal-feat-icon">✓</span>{{ feature }}
+          </li>
+        </ul>
+        <button class="modal-cta-btn" (click)="getStarted(selectedService)">Get Started</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Toast Notification -->
   <div class="toast" [class.show]="showToast">{{ toastMessage }}</div>

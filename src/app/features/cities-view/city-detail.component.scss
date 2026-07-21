@@ -1,0 +1,293 @@
+:root {
+  --hk-navy-900: #17143a;
+  --hk-orange: #f4820c;
+  --hk-orange-dark: #d96e00;
+  --hk-white: #ffffff;
+  --hk-ink: #1a1a2e;
+  --hk-muted: #a9a6c9;
+  --hk-muted-light: #6b7280;
+  --hk-border-light: #e5e7eb;
+  --hk-success: #16a34a;
+  --hk-font-display: Georgia, 'Times New Roman', serif;
+  --hk-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --hk-font-mono: 'Space Mono', 'Courier New', monospace;
+  --hk-radius-sm: 8px;
+  --hk-radius-md: 10px;
+  --hk-radius-lg: 16px;
+  --hk-radius-pill: 999px;
+}
+
+/* ── Hero ── */
+.city-hero {
+  background-color: var(--hk-navy-900);
+  background-size: cover;
+  background-position: center;
+  padding: 90px 24px 70px;
+  text-align: center;
+  color: var(--hk-white);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Darkening scrim so text is always legible over any photo —
+   this was missing before, which is why text sat unreadable
+   directly on the raw photo */
+.city-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(23, 20, 58, 0.88) 0%,
+    rgba(23, 20, 58, 0.72) 50%,
+    rgba(23, 20, 58, 0.88) 100%
+  );
+}
+
+.city-hero__overlay {
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.city-hero__badge {
+  display: inline-block;
+  font-family: var(--hk-font-mono);
+  font-size: 12.5px;
+  background: rgba(244, 130, 12, 0.18);
+  color: #ffb45c;
+  border: 1px solid rgba(244, 130, 12, 0.4);
+  padding: 6px 14px;
+  border-radius: var(--hk-radius-pill);
+  margin-bottom: 20px;
+}
+
+.city-hero__title {
+  font-family: var(--hk-font-display);
+  font-size: 44px;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: #ffffff;
+}
+
+.city-hero__subtitle {
+  font-family: var(--hk-font-body);
+  color: var(--hk-muted);
+  font-size: 16px;
+  margin: 0;
+}
+
+/* ── Body ── */
+.city-body {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  font-family: var(--hk-font-body);
+}
+
+/* ── Filters — custom styled selects, not raw browser defaults ── */
+.city-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.select-wrap {
+  position: relative;
+}
+
+.select-wrap::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--hk-muted-light);
+  border-bottom: 2px solid var(--hk-muted-light);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.city-filters select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 10px 36px 10px 14px;
+  border-radius: var(--hk-radius-sm);
+  border: 1.5px solid var(--hk-border-light);
+  font-size: 14px;
+  font-family: var(--hk-font-body);
+  color: var(--hk-ink);
+  background: var(--hk-white);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.city-filters select:hover,
+.city-filters select:focus {
+  border-color: var(--hk-orange);
+  outline: none;
+}
+
+/* ── Loading / Empty ── */
+.city-loading,
+.city-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 64px 0;
+  color: var(--hk-muted-light);
+  font-size: 14.5px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #eee0d0;
+  border-top-color: var(--hk-orange);
+  border-radius: 50%;
+  animation: hk-spin 0.7s linear infinite;
+}
+
+@keyframes hk-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Property grid ── */
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 22px;
+}
+
+.property-card {
+  border: 1px solid var(--hk-border-light);
+  border-radius: var(--hk-radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--hk-white);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.property-card:hover {
+  box-shadow: 0 14px 28px rgba(23, 20, 58, 0.12);
+  transform: translateY(-2px);
+}
+
+.property-card__image {
+  position: relative;
+  height: 170px;
+  background: #f1eefc; /* shows while the real image loads */
+}
+
+.property-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.badge-verified {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--hk-success);
+  color: var(--hk-white);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--hk-radius-pill);
+}
+
+.property-card__body {
+  padding: 16px;
+}
+
+.property-card__body h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  color: var(--hk-ink);
+}
+
+.property-card__body .area {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--hk-muted-light);
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.meta-row .rent {
+  font-weight: 700;
+  color: var(--hk-navy-900);
+}
+
+.meta-row .rent span {
+  font-weight: 400;
+  color: var(--hk-muted-light);
+  font-size: 12px;
+}
+
+.meta-row .rating {
+  font-size: 13px;
+  color: var(--hk-orange-dark);
+}
+
+.tag {
+  display: inline-block;
+  font-family: var(--hk-font-mono);
+  font-size: 11px;
+  text-transform: capitalize;
+  background: #fff1e0;
+  color: var(--hk-orange-dark);
+  padding: 3px 10px;
+  border-radius: var(--hk-radius-pill);
+}
+
+/* ── Pagination ── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 36px;
+  font-size: 14px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  border-radius: var(--hk-radius-sm);
+  border: 1px solid var(--hk-border-light);
+  background: var(--hk-white);
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination button:not(:disabled):hover {
+  border-color: var(--hk-orange);
+  color: var(--hk-orange-dark);
+}
+
+.city-not-found {
+  text-align: center;
+  padding: 96px 24px;
+  font-family: var(--hk-font-body);
+}
+
+.city-not-found a {
+  color: var(--hk-orange);
+  font-weight: 600;
+}
